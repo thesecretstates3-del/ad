@@ -1,0 +1,28 @@
+{
+  "name": "ad",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/animation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thesecretstates3-del/ad.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thesecretstates3-del/ad/issues"
+  },
+  "homepage": "https://github.com/thesecretstates3-del/ad#readme",
+  "dependencies": {
+    "d3-geo": "^3.1.1",
+    "flubber": "^0.4.2",
+    "polygon-clipping": "^0.15.7",
+    "polylabel": "^1.1.0",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
+  }
+}
