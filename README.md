@@ -7,12 +7,23 @@ A map animation that runs from 3000 BC to the year 10000: a territory with carto
 - `src/index.html` + `src/animation.js`: the animation; every frame is a function of `t`
 - `scripts/render-video.cjs`: Playwright + ffmpeg → `out/evolution-of-india.mp4`
 
+## Running locally
+
+Requirements: [Node.js](https://nodejs.org) 18+, [Git](https://git-scm.com), and [ffmpeg](https://ffmpeg.org) on PATH (only for video export; on Windows `winget install ffmpeg`, on macOS `brew install ffmpeg`).
+
 ```bash
+git clone https://github.com/thesecretstates3-del/ad.git
+cd ad
+git checkout ccr-cdd15618-68zz3r
 npm install
-node scripts/build-geo.mjs            # after editing eras.mjs
-open src/index.html                   # live preview (space = pause, ←/→ = jump one era)
-node scripts/render-video.cjs 30      # 1920x1080 30fps MP4
-node scripts/snapshot.cjs <dir> 10 40 # stills at given seconds
+npx playwright install chromium   # one-time, for video export
+```
+
+```bash
+# live preview: open src/index.html in a browser (space = pause, ←/→ = jump one era)
+npm run build                     # after editing scripts/eras.mjs
+npm run render                    # out/evolution-of-india.mp4, 1920x1080 30fps
+npm run snapshot -- out 10 40     # stills at given seconds
 ```
 
 Borders before 1858 are approximate; everything after 2026 is fiction.
