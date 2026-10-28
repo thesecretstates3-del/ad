@@ -26,4 +26,6 @@ npm run render                    # out/evolution-of-india.mp4, 1920x1080 30fps
 npm run snapshot -- out 10 40     # stills at given seconds
 ```
 
+See `docs/LOCAL-REHBER.md` for the full local guide (Turkish).
+
 Borders before 1858 are approximate; everything after 2026 is fiction.
