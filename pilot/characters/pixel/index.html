@@ -46,7 +46,7 @@ function panel(x0, y0, x1, y1) {
     px(x, y, border ? '#C9B387' : (y === y1 - 1 || x === x1 - 1) ? '#F2E8CF' : '#FBF6E8');
   }
 }
-panel(195, 4, 315, 94); panel(195, 99, 315, 175);
+panel(195, 4, 315, 100); panel(195, 105, 315, 175);
 const bg = new Sprite(Texture.from(bgc)); bg.texture.source.scaleMode = 'nearest'; bg.scale.set(6);
 app.stage.addChild(bg);
 
@@ -61,7 +61,7 @@ point.scale.set(6); point.position.set(780, 960); art.addChild(point);
 
 // ------------------------------------------------ 2x2 expression heads (x4)
 const names = ['neutral', 'happy', 'surprised', 'scared'];
-const cells = [[1350, 248], [1710, 248], [1350, 521], [1710, 521]];
+const cells = [[1350, 272], [1710, 272], [1350, 556], [1710, 556]];
 names.forEach((n, i) => {
   const c = createCharacter(app, { pose: 'idle', expression: n });
   const head = c.parts.head; head.removeFromParent();
@@ -73,14 +73,13 @@ names.forEach((n, i) => {
 // ------------------------------------------------ exploded rig (x3) with pivot dots
 const rig = createCharacter(app, { pose: 'idle', expression: 'neutral' });
 explode(rig, 1);
-rig.scale.set(3); rig.position.set(1530, 1022); art.addChild(rig);
+rig.scale.set(3); rig.position.set(1690, 1008); art.addChild(rig);
 const DOTS = ['hips', 'torso', 'head', 'hair_curl', 'collar', 'armL_upper', 'armL_lower', 'handL', 'armR_upper', 'armR_lower', 'handR',
   'legL_upper', 'legL_lower', 'footL', 'legR_upper', 'legR_lower', 'footR', 'eyeL', 'eyeR', 'browL', 'browR', 'mouth', 'pocket', 'pin'];
 const dots = new Graphics();
 for (const n of DOTS) {
   const p = rig.parts[n].getGlobalPosition(); const x = Math.round(p.x), y = Math.round(p.y);
-  dots.circle(x, y, 6).fill(0xFF5D5D).stroke({ width: 2, color: 0x1E1B24 });
-  dots.circle(x, y, 1.5).fill(0xFFF4DC);
+  dots.circle(x, y, 4.5).fill(0xFF5D5D).stroke({ width: 2, color: 0x1E1B24 });
 }
 ui.addChild(dots);
 
@@ -93,9 +92,11 @@ const sub = label('OLI  /  CHARACTER STYLE SHEET  /  32-BIT PIXEL, 64x96 LOGICAL
 const bar = new Graphics().rect(48, 128, 120, 6).fill(0x2EC4B6).rect(168, 128, 48, 6).fill(0xFF5D5D); ui.addChild(bar);
 const l1 = label('IDLE', 26, 0x6B5B45, 6); l1.anchor.set(0.5, 0); l1.position.set(330, 1010); ui.addChild(l1);
 const l2 = label('POINT  -  "I CHOOSE THIS ONE"', 26, 0x6B5B45, 4); l2.anchor.set(0.5, 0); l2.position.set(780, 1010); ui.addChild(l2);
-const l3 = label('EXPRESSIONS', 20, 0x7A6748, 5); l3.position.set(1200, 40); ui.addChild(l3);
-const l4 = label('RIG  -  PARTS + PIVOTS', 20, 0x7A6748, 5); l4.position.set(1200, 612); ui.addChild(l4);
+const l3 = label('EXPRESSIONS', 16, 0x7A6748, 4); l3.position.set(1204, 32); ui.addChild(l3);
+const l4 = label('RIG  /  PIVOTS', 20, 0x7A6748, 5); l4.position.set(1204, 646); ui.addChild(l4);
 
+const legend = label('root [ground]\n  hips\n    legs: upper > lower > foot\n    torso\n      collar, pocket, strings, pin\n      arms: upper > lower > hand\n      head\n        hair_back, face, hair_front\n        face: eyes, brows, mouth, blush\n        hair_curl [top of head]\n\nred dot = pivot', 17, 0x6B5B45, 0, 'normal');
+legend.style.lineHeight = 26; legend.position.set(1204, 696); ui.addChild(legend);
 app.render();
 window.__READY = true;
 </script></body></html>

@@ -109,14 +109,14 @@ function fringeY(x) {
   const ax = Math.abs(x);
   if (ax >= 19) return -57;
   if (ax >= 17) return -66;
-  const t = (((x + 16) % 12) + 12) % 12, d = Math.abs(t - 6) / 6, amp = x < -4 ? 5 : x < 8 ? 4 : 3;
+  const t = (((x + 16) % 12) + 12) % 12, d = Math.abs(t - 6) / 6, amp = x < -4 ? 3 : x < 8 ? 3 : 2;
   return -73 + Math.round(amp * (1 - d));
 }
 function curlPath(ox) {
   const pts = [];
-  for (let i = 0; i <= 12; i++) { const t = i / 12; pts.push([ox - 1 - 1.5 * t, -83 - 8.5 * t, 3.6 - 0.3 * t]); }
-  const R = 5.6, cx = ox + 3, cy = -91.5;
-  for (let i = 0; i <= 40; i++) { const t = i / 40, a = t * 1.34 * Math.PI; pts.push([cx - R * Math.cos(a), cy - R * Math.sin(a), 3.3 - 1.4 * t]); }
+  for (let i = 0; i <= 12; i++) { const t = i / 12; pts.push([ox - 1 - 2.2 * t, -83 - 10 * t, 3.8 - 0.3 * t]); }
+  const R = 7, cx = ox + 4, cy = -93;
+  for (let i = 0; i <= 40; i++) { const t = i / 40, a = t * 1.3 * Math.PI; pts.push([cx - R * Math.cos(a), cy - R * Math.sin(a), 3.5 - 2.0 * t]); }
   return pts;
 }
 function headFrames(ox, k) {
@@ -138,7 +138,7 @@ function headFrames(ox, k) {
       if (v > 0.55 && v < 0.85 && x - ox < -3 && x - ox > -15 && y < -76) g.set(x, y, C.HAIRH);
     });
   }, o);
-  f.hair_curl = mk([ox - 8, -104, ox + 14, -82], [ox, -84], g => {
+  f.hair_curl = mk([ox - 9, -110, ox + 18, -82], [ox, -84], g => {
     for (const [x, y, r] of curlPath(ox)) ell(g, x, y, r, r, C.HAIR);
     shade(g, C.HAIR, C.HAIRS, { b: 2, r: 2 });
     rim(g, C.HAIR, C.HAIRH, true, true);
@@ -188,33 +188,32 @@ function torsoFrame(cx, hw) {
   }, { light: { [C.HOOD]: C.HOODS } });
 }
 function collarFrame(cx, rx) {
-  return mk([cx - rx - 1, -54, cx + rx + 1, -41], [cx, -48], g => {
-    ell(g, cx, -47, rx, 6, C.HOOD);
-    ell(g, cx, -47, rx - 7, 3, C.SKIN);
+  return mk([cx - rx - 1, -54, cx + rx + 1, -38], [cx, -48], g => {
+    ell(g, cx, -45, rx, 5.5, C.HOOD);
+    ell(g, cx, -47, rx - 9, 2.4, C.SKIN);
     shade(g, C.HOOD, C.HOODS, { b: 2, r: 2 });
-    for (let x = cx - rx + 8; x <= cx + rx - 8; x++) { g.set(x, -46, C.SKINS); g.set(x, -45, C.SKINS); }
+    for (let x = cx - rx + 10; x <= cx + rx - 10; x++) g.set(x, -45, C.SKINS);
     rim(g, C.HOOD, C.CREAM, true, false);
   }, { light: { [C.HOOD]: C.HOODS } });
 }
 function stringsFrame(cx) {
-  return mk([cx - 7, -44, cx + 7, -33], [cx, -44], g => {
+  return mk([cx - 7, -41, cx + 7, -31], [cx, -41], g => {
     [[cx - 5, 0], [cx + 4, 1]].forEach(([x, w]) => {
-      for (let y = -44; y <= -34; y++) { const xx = x + (y > -38 ? w - 0 : 0); g.set(xx, y, C.CREAM); g.set(xx + 1, y, C.CREAM); }
-      g.set(x + (w ? 1 : 0), -34, C.HOODS); g.set(x + 1 + (w ? 1 : 0), -34, C.HOODS);
-      g.set(x + (w ? 1 : 0), -33, C.HOODS); g.set(x + 1 + (w ? 1 : 0), -33, C.HOODS);
+      for (let y = -41; y <= -32; y++) { const xx = x; g.set(xx, y, C.CREAM); g.set(xx + 1, y, C.CREAM); }
+      g.set(x, -32, C.HOODS); g.set(x + 1, -32, C.HOODS); g.set(x, -31, C.HOODS); g.set(x + 1, -31, C.HOODS);
     });
   }, { noOutline: true });
 }
 function pocketFrame(cx, hw) {
-  return mk([cx - hw - 3, -35, cx + hw + 3, -29], [cx, -32], g => {
-    for (let y = -35; y <= -29; y++) { const half = hw + Math.round((y + 35) / 6 * 2); rect(g, cx - half, y, cx + half, y, C.HOOD); }
+  return mk([cx - hw - 3, -34, cx + hw + 3, -29], [cx, -32], g => {
+    for (let y = -34; y <= -29; y++) { const half = hw + Math.round((y + 34) / 5 * 2); rect(g, cx - half, y, cx + half, y, C.HOOD); }
     shade(g, C.HOOD, C.HOODS, { b: 1, r: 2 });
   }, { outlineColor: C.HOODS });
 }
 function pinFrame(cx) {
   const rows = ["#...#", ".#.#.", "..#..", "..#..", "..#.."];
-  return mk([cx - 2, -41, cx + 2, -37], [cx, -39], g => {
-    rows.forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') g.set(cx - 2 + i, -41 + j, C.TEAL); }));
+  return mk([cx - 2, -39, cx + 2, -35], [cx, -37], g => {
+    rows.forEach((r, j) => [...r].forEach((ch, i) => { if (ch === '#') g.set(cx - 2 + i, -39 + j, C.TEAL); }));
   }, { noOutline: true });
 }
 
@@ -253,19 +252,19 @@ function handFrame(s, kind) {
   }, { next: null });
 }
 function thigh(s, kind) {
-  const nx = kind === 'down' ? [0, 12] : [3 * s, 12], L = Math.hypot(...nx), ux = nx[0] / L, uy = nx[1] / L;
+  const nx = kind === 'down' ? [0, 12] : [5 * s, 12], L = Math.hypot(...nx), ux = nx[0] / L, uy = nx[1] / L;
   return mk([-8, -6, 12, 18], [0, 0], g => {
     cap(g, 0, 0, nx[0], nx[1], 4.5, C.PANT, { t1: L - 0.01 });
     shade(g, C.PANT, C.PANTS, { r: 2 });
   }, { next: nx, excl: (x, y) => x * ux + y * uy >= L - 0.01 });
 }
-function shin(s) {
+function shin(s, dx = 1) {
   return mk([-8, -2, 8, 12], [0, 0], g => {
-    cap(g, 0, 0, s, 8, 4.5, C.PANT, { t0: 0, t1: 8.05 });
+    cap(g, 0, 0, dx * s, 8, 4.5, C.PANT, { t0: 0, t1: 8.05 });
     shade(g, C.PANT, C.PANTS, { r: 2 });
     g.each((x, y, c) => { if (c && y >= 7) g.set(x, y, C.PANTS); });
-    for (let y = 9; y <= 10; y++) rect(g, s - 2, y, s + 2, y, y === 10 ? C.SKINS : C.SKIN);
-  }, { next: [s, 9], excl: (x, y) => y <= -1 });
+    for (let y = 9; y <= 10; y++) rect(g, dx * s - 2, y, dx * s + 2, y, y === 10 ? C.SKINS : C.SKIN);
+  }, { next: [dx * s, 9], excl: (x, y) => y <= -1 });
 }
 function shoe(kind) {
   const front = [[-3, 3], [-4, 4], [-5, 5], [-6, 6], [-6, 6], [-6, 6], [-6, 6], [-6, 6], [-5, 5]];
@@ -299,7 +298,7 @@ function lib() {
     F['arm' + side + '_lower'] = { down: armLower(s, 'down'), bent: armLower(s, 'bent'), point: armLower(s, 'point') };
     F['hand' + side] = { down: handFrame(s, 'down'), point: handFrame(s, 'point') };
     F['leg' + side + '_upper'] = { down: thigh(s, 'down'), out: thigh(s, 'out') };
-    F['leg' + side + '_lower'] = { down: shin(s) };
+    F['leg' + side + '_lower'] = { down: shin(s), out: shin(s, 3) };
     F['foot' + side] = { front: shoe('front'), q3: shoe('side') };
   }
   return (LIB = F);
@@ -325,8 +324,8 @@ export const PART_NAMES = NODES.map(n => n[0]);
 
 const tiltDx = y => Math.round((y + 48) * -0.09);
 const faceBase = {
-  front: { eyeL: [-9, -60], eyeR: [9, -60], browL: [-9, -67], browR: [9, -67], mouth: [0, -51], blushL: [-15, -54], blushR: [15, -54] },
-  q3: { eyeL: [-5, -60], eyeR: [13, -60], browL: [-5, -67], browR: [13, -67], mouth: [4, -51], blushL: [-12, -54], blushR: [19, -54] },
+  front: { eyeL: [-9, -59], eyeR: [9, -59], browL: [-9, -66], browR: [9, -66], mouth: [0, -51], blushL: [-15, -53], blushR: [15, -53] },
+  q3: { eyeL: [-5, -59], eyeR: [13, -59], browL: [-5, -66], browR: [13, -66], mouth: [4, -51], blushL: [-12, -53], blushR: [15, -53] },
 };
 function faceAt(kind, tilt) {
   const out = {};
@@ -350,7 +349,7 @@ export const POSES = {
       head: { f: 'tilt' }, hair_back: { f: 'tilt' }, hair_front: { f: 'tilt' }, hair_curl: { f: 'tilt' },
       armR_upper: { f: 'raise', at: [15, -46] }, armR_lower: { f: 'point' }, handR: { f: 'point' },
       armL_upper: { f: 'bent', at: [-12, -46] }, armL_lower: { f: 'bent' }, handL: { f: 'down' },
-      legR_upper: { f: 'out', at: [5, -30] },
+      legR_upper: { f: 'out', at: [5, -30] }, legR_lower: { f: 'out' },
       footL: { f: 'q3' }, footR: { f: 'q3' },
     },
     face: faceAt('q3', true),
@@ -364,11 +363,11 @@ export const EXPRESSIONS = {
 };
 // pulled-apart offsets (relative to parent) used by the exploded rig view
 const EXPLODE = {
-  torso: [0, -3], head: [0, -14], collar: [0, -9], pocket: [0, 9], strings: [0, 4], pin: [11, -2],
-  hair_back: [-9, -3], hair_front: [8, -9], hair_curl: [8, -14],
-  eyeL: [-8, 0], eyeR: [8, 0], browL: [-8, -5], browR: [8, -5], mouth: [0, 9], blushL: [-9, 5], blushR: [9, 5],
-  armL_upper: [-10, 0], armL_lower: [-3, 5], handL: [-2, 6], armR_upper: [10, 0], armR_lower: [3, 5], handR: [4, 4],
-  legL_upper: [-6, 6], legL_lower: [-1, 6], footL: [-1, 7], legR_upper: [6, 6], legR_lower: [1, 6], footR: [1, 7],
+  torso: [0, -2], head: [0, -9], collar: [0, -7], pocket: [0, 7], strings: [0, 3], pin: [9, -1],
+  hair_back: [-7, -2], hair_front: [5, -6], hair_curl: [7, -10],
+  eyeL: [-6, 0], eyeR: [6, 0], browL: [-6, -4], browR: [6, -4], mouth: [0, 6], blushL: [-7, 4], blushR: [7, 4],
+  armL_upper: [-8, 0], armL_lower: [-2, 4], handL: [-1, 4], armR_upper: [8, 0], armR_lower: [2, 4], handR: [2, 4],
+  legL_upper: [-5, 4], legL_lower: [-1, 4], footL: [-1, 4], legR_upper: [5, 4], legR_lower: [1, 4], footR: [1, 4],
 };
 
 // ---------------------------------------------------------------- public API
