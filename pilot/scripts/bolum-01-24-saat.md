@@ -1,126 +1,100 @@
-# Bölüm 1: "1 Milyon Dolar mı, 24 Saat Geri mi?" (v4)
+# Bölüm 1: "1 Milyon Dolar mı, 24 Saat Geri mi?" (v5)
 
-**Kullanılan yöntem:**
-- `yt-script` (Jakeschincariol/youtube-agent-skill, ~5,9k yıldız): ilk 15 saniye üç iş yapar: başlığın vaadini doğrular, kapanmayan bir soru açar, ödülün var olduğunu kanıtlar. Kanal tanıtımı yoktur. Her bölümde ekranda ne olduğu yazılır. Tek kapanış çağrısı vardır.
-- `humanizer` (blader/humanizer, ~69k yıldız): "X değil Y" kalıbı, tek satırlık dramatik kapanışlar, derin görünen özlü sözler ve üçlü sıralamalar ayıklandı.
-- Ses: rakibin iki transkriptinden çıkarıldı. "Sen" dili, şimdiki zaman, somut detaylar, sesli okunan sayılar, her 10–15 saniyede bir kuru espri.
-
-**Süre:** dakikada 150 kelimeyle yaklaşık 4:55 (~740 kelime).
+**Omurga:** 14 Kasım sabahı 07:12'de odada iki kapı var. Kulübedeki telefon çalıyor ve senin sesin "Dün saat 18:20'de bir şeyi kaçırdın" diyor. Video bu sorunun cevabını iki yoldan veriyor. Sonunda telefonu kimin açtığı ortaya çıkıyor.
+**Yöntem:** yt-script hook kuralları + humanizer ayıklaması + rakip anlatım sesi ("sen", şimdiki zaman, somut detay).
+**Süre:** yaklaşık 4:55 (~740 kelime, dakikada 150 kelime).
 
 ---
-
-## Hook seçenekleri (ikisinden biri seçilecek)
-
-**Hook 1, formül "Before and After" + "The Comparison":** önerilen
-> Saat 18:20. Aynı akşam, aynı otobüs durağı. Ve iki farklı sen.
-> Birinin hesabında bir milyon dolar var. Telefonunda kırk yedi cevapsız arama var, hepsi borç isteyen akrabalardan.
-> Diğerinin cebinde on iki lira var. Ve dört dakika sonra, bir yabancının hayatını kurtaracak.
-> İkisi de bu sabah aynı odada uyandı. Aralarındaki tek fark, saat 07:12'de hangi kapıyı açtıkları.
-
-*Neden:* Başlıktaki iki seçeneği ilk cümlede doğrular, "hangisi hangisi oldu?" sorusunu açar ve iki yolu da göstereceğini vaat eder.
-
-**Hook 2, formül "The Impossible Claim":**
-> Bu sabah sana bir milyon dolar teklif edildi. Ve sen onu reddettin.
-> Bu akşam saat 18:24'te, bu kararın neden doğru olduğunu öğreneceksin. Ya da neden hayatının en büyük hatası olduğunu.
-> Çünkü bugün iki kez yaşanacak. Bir kez parayla, bir kez onsuz.
-
-*Neden:* Kulağa saçma gelen bir iddia ve hemen ardından kanıt vaadi. Riski: seçimi önceden açık ediyor.
-
----
-
-## SENARYO (Hook 1 ile)
 
 ### 0:00–0:20 · HOOK
-`[EKRANDA: Bölünmüş çizgi roman paneli. İki panelde de aynı durak ve köşede 18:20 saati. Sol: telefon ekranında 1.000.000 $ ve "47 cevapsız arama". Sağ: avuçta bozuk paralar, arka planda bankta oturan yaşlı bir adam.]`
-Saat 18:20. Aynı akşam, aynı otobüs durağı. Ve iki farklı sen.
-Birinin hesabında bir milyon dolar var. Telefonunda kırk yedi cevapsız arama var, hepsi borç isteyen akrabalardan.
-Diğerinin cebinde on iki lira var. Ve dört dakika sonra, bir yabancının hayatını kurtaracak.
-İkisi de bu sabah aynı odada uyandı. Aralarındaki tek fark, saat 07:12'de hangi kapıyı açtıkları.
+`[EKRANDA: Bölünmüş panel. Sol: 13 Kasım 18:24, durakta yere düşmüş yaşlı bir adam, yanında diz çökmüş Oli, telefon kulağında, yolda mandalinalar. Sağ: 14 Kasım, taksinin arka koltuğu, Oli'nin telefonunda bir haber fotoğrafı: aynı durak, aynı mandalinalar. Köşede: 1.000.000 $.]`
+Aynı adam. Aynı durak. Yolda aynı mandalinalar.
+Bir versiyonunda, onun yanında diz çökmüşsün ve ambulansı arıyorsun.
+Diğerinde, onu ertesi gün bir haber fotoğrafında görüyorsun. Hesabında bir milyon dolar varken.
+İki versiyon da aynı sabah, aynı telefonla başladı.
 
-### 0:20–0:40 · SEÇİM
-`[EKRANDA: Sabah, oda. Geri sarma geçişi. Odanın ortasında iki geçit belirir. A: turkuaz kasa. B: mercan telefon kulübesi, tepesinde geriye dönen saat.]`
+### 0:20–0:45 · SEÇİM
+`[EKRANDA: 14 Kasım, 07:12. Oda. Geçitler belirir: A, turkuaz kasa "1.000.000 $". B, mercan telefon kulübesi, tepesinde geriye dönen saat "−24 SAAT".]`
 Saat 07:12. Gözünü açıyorsun ve odanın ortasında, dün gece orada olmayan iki şey duruyor.
 Solda çelik bir kasa. Kapağında "1.000.000 $" yazıyor.
-Sağda, içinde ahizesi sallanan eski bir telefon kulübesi. Tepesindeki saat geriye doğru dönüyor: eksi yirmi dört saat.
-Kulübenin camına bir not yapıştırılmış: "Dünü baştan yaşa. Her şeyi hatırlayarak."
-Kasanın üstünde de bir not var: "Sadece birini açabilirsin."
+Sağda eski bir telefon kulübesi. Camında bir not var: "Dünü baştan yaşa. Her şeyi hatırlayarak."
+Kasanın üstündeki not daha kısa: "Sadece birini açabilirsin."
 Bir milyon dolar. Düşünecek bir şey yok. Elin kasanın koluna gidiyor.
-`[EKRANDA: Kulübedeki ahize sallanır, zil çalar. Telefon kulübesi titrer.]`
-Tam o sırada kulübedeki telefon çalıyor. Ahizeyi kaldırıyorsun. Hattın öbür ucundaki ses senin sesin:
+`[EKRANDA: Kulübedeki ahize sallanır, zil çalar.]`
+Tam o sırada kulübedeki telefon çalıyor. Ahizeyi kaldırıyorsun. Hattın öbür ucundaki ses senin sesin.
 **SES (SENİN SESİN, CIZIRTILI):** Dün saat 18:20'de bir şeyi kaçırdın.
-Ve hat kapanıyor.
+Hat kapanıyor.
 Dün 18:20'de ne olduğunu hatırlamıyorsun. Kulaklığın takılıydı, eve yürüyordun, o kadar.
-Kasa bir milyon dolar diyor. Kulübe ise sana dün hakkında bilmediğin bir şey söylüyor. Ve onu öğrenmenin tek yolu, dünü tekrar yaşamak.
+Kasa sana bir milyon dolar veriyor. Kulübe ise dün hakkında bilmediğin bir şeyi. Onu öğrenmenin tek yolu, dünü tekrar yaşamak.
 Elini kasanın kolundan çekiyorsun.
 `[EKRANDA: Oli B'yi gösterir: "BUNU SEÇİYORUM!" A kararır. Kulübe kapısı: SLAM.]`
 
-### 0:40–2:25 · B YOLU: DÜN, İKİNCİ KEZ
+### 0:45–2:35 · B YOLU: DÜN, İKİNCİ KEZ
 `[EKRANDA: Telefon kilit ekranı: 13 KASIM, 07:12.]`
-Kulübenin kapısı kapanıyor, ve yatağında uyanıyorsun. Telefonun 13 Kasım diyor. Yani dün.
+Kulübenin kapısı kapanıyor ve yatağında uyanıyorsun. Telefon 13 Kasım diyor.
 Mutfaktan annenin sesi geliyor: "Kahvaltı hazır, tost biraz yandı."
 Biliyorsun. Dün de yanmıştı. Aynı köşesi.
-Saat 08:31'de otobüs sert fren yapacak ve önündeki adamın kahvesi senin montuna dökülecek. Bu sefer bir adım sola kayıyorsun. Kahve, arkandaki adamın ayakkabısına dökülüyor.
-Adam sana bakıyor. Sen camdan dışarı bakıyorsun.
-`[EKRANDA: Ekran köşesinde saat damgaları belirir: 07:12 ✓ 08:31 ✓]`
-Öğleye kadar dünün bütün küçük felaketlerinden kaçıyorsun ve kendini bir dahi gibi hissediyorsun.
-Sonra asıl fikir geliyor. Dün akşam haberlerde gördün: Köşedeki büfeden satılan bir piyango bileti kırk milyon kazandı. Satış saati 14:33.
+08:31'de otobüs sert fren yapacak ve öndeki adamın kahvesi montuna dökülecek. Bu sefer bir adım sola kayıyorsun. Kahve, arkandaki adamın ayakkabısına dökülüyor. Adam sana bakıyor. Sen camdan dışarı bakıyorsun.
+`[EKRANDA: Köşede saat damgaları: 07:12 ✓ 08:31 ✓ 18:20 ?]`
+18:20'ye daha on saat var. Ve dünü ezbere bilen biri için on saat, çok uzun bir süre.
+Dün akşam haberlerde gördüğün şeyi hatırlıyorsun: Köşedeki büfeden satılan bir piyango bileti kırk milyon kazandı. Satış saati 14:33.
 14:30'da büfedesin. Üç dakika erken, çünkü planlı insansın.
 Bileti alıyorsun. Akşam çekiliş yapılıyor. Kazanan numara seninki değil.
-Büfeci, sen erken geldiğin için sana bir önceki bileti verdi. Kırk milyonluk bilet, senden sonra gelen müşteriye gitti. Pazar poşetli, emekli bir teyzeye.
+Erken geldiğin için büfeci sana bir önceki bileti verdi. Kırk milyonluk bilet, senden sonra gelen müşteriye gitti: pazar poşetli, emekli bir teyzeye.
 `[EKRANDA: Haber bandı: "Emekli öğretmen 40 milyon kazandı." Teyze kameraya poşetini sallar.]`
-Ve kuralı o an anlıyorsun: Bir şeye dokunduğunda, ondan sonra gelen her şey yeniden yazılıyor. Dünkü hafızan artık bir harita, ve dokunduğun her yerde harita siliniyor.
-`[EKRANDA: Saat damgalarının yanında soru işaretleri çıkar: 18:20 ?]`
-Bu da bir sorun. Çünkü sabahki ses sana tek bir şey verdi: 18:20. Ne olacağını hâlâ bilmiyorsun. Ve artık dünün aynen tekrar edeceğinden de emin değilsin.
+O an kuralı anlıyorsun. Bir şeye dokunduğunda, ondan sonra gelen her şey yeniden yazılıyor. Dünkü hafızan bir harita, ve dokunduğun her yerde harita siliniyor.
+Bu da bir sorun. Çünkü elindeki tek ipucu bir saat: 18:20. Ne olacağını bilmiyorsun. Ve artık dünün aynen tekrar edeceğinden de emin değilsin.
+`[EKRANDA: Akşam. Durak. Köşede 18:10.]`
 18:10'da, dün kulaklıkla yürüdüğün yoldasın. Yolun ortasında bir otobüs durağı var. Bankta, kucağında mandalina poşetiyle yaşlı bir adam oturuyor. Dün buradan geçtin. Onu hiç fark etmedin.
 18:19. 18:20. Hiçbir şey olmuyor.
-18:21'de adam kalkıp otobüs tarifesine bakıyor. Belki bugün düşmeyecek. Belki sen bir şeyi değiştirdin.
+18:21'de adam kalkıp otobüs tarifesine bakıyor. Belki bugün bir şey olmayacak. Belki piyangoyla birlikte bunu da değiştirdin.
 18:24'te yere düşüyor. Mandalinalar yola dağılıyor. Durakta on bir kişi var. Kimse kıpırdamıyor.
-Sen zaten yanındasın. Telefonun zaten elinde. Ambulans dört dakikada geliyor.
-`[EKRANDA: Hastane odası. Adam yatakta, başucunda mandalina poşeti.]`
-Adamın adı Hikmet. Yetmiş bir yaşında. Gözlerini açtığında ilk sorusu şu oluyor:
+Sen zaten yanındasın. Telefon zaten elinde. Ambulans dört dakikada geliyor.
+`[EKRANDA: Hastane odası. Adam yatakta, komodinde mandalina poşeti.]`
+Adamın adı Hikmet. Yetmiş bir yaşında. Gözlerini açınca ilk sorusu şu oluyor:
 **HİKMET:** Neden durdun? Kimse durmaz.
 **SEN:** Dün de buradan geçtim. Ama kulaklığım takılıydı.
-Hikmet Bey ne demek istediğini anlamıyor. Bir mandalina uzatıyor ve gözlerini kapatıyor.
-Sabahki sesin ne demek istediğini artık biliyorsun. Ama o adamın dün, sen yokken ne yaşadığını hâlâ bilmiyorsun.
+Hikmet Bey ne demek istediğini anlamıyor. Sana bir mandalina uzatıyor ve gözlerini kapatıyor.
+Sabahki sesin neden bahsettiğini artık biliyorsun. Ama o telefonu kimin açtığını hâlâ bilmiyorsun.
 
-### 2:25–2:40 · GERİ SARMA
-`[EKRANDA: Görüntü VHS gibi geri sarılır. Oda, saat 07:12. B kararır, A parlar.]`
+### 2:35–2:50 · GERİ SARMA
+`[EKRANDA: Görüntü VHS gibi geri sarılır. 14 Kasım, 07:12. Oda. B kararır, A parlar.]`
 Peki kasayı açsaydın?
 Saat 07:12. Aynı oda, aynı iki kapı. Bu sefer elin kasanın kolunda. Kulübedeki telefon çalmaya başlıyor.
-Açmıyorsun. Kolu çeviriyorsun. Telefon susuyor.
+Açmıyorsun. Kolu çeviriyorsun. Telefon susuyor. Kulübe, bir saniye içinde odadan kayboluyor.
 
-### 2:40–4:20 · A YOLU: BİR MİLYON DOLAR
-`[EKRANDA: Kasa açılır. İçinde para yok, sadece bir banka kartı. Telefon titrer: "Hesabınıza 1.000.000 $ yatırıldı."]`
+### 2:50–4:25 · A YOLU: BİR MİLYON DOLAR
+`[EKRANDA: Kasa açılır. İçinde sadece bir banka kartı. Telefon titrer: "Hesabınıza 1.000.000 $ yatırıldı."]`
 Kasanın içinde para yok. Sadece bir banka kartı var. Telefonun titriyor: Hesabına bir milyon dolar yatırılmış.
 Bildirimi on bir kez açıp kapatıyorsun. Sıfırları sayıyorsun. Altı tane. Bir daha sayıyorsun.
 Mutfaktan annen sesleniyor: "Kahvaltı hazır, tost biraz yandı."
 "Anne, artık kahvaltıyı dışarıda yapıyoruz."
-`[EKRANDA: Telefona bildirim yağmuru, sayaç hızla artar.]`
-Öğlene kadar, on iki yaşından beri istediğin her şeyi sepete atıyorsun. Öğleden sonra, sepetteki şeylerin yarısını neden istediğini hatırlamıyorsun.
-Saat 15:00'te ailenin WhatsApp grubu hayata dönüyor. Üç yıldır kimsenin yazmadığı gruba on dört kuzen aynı anda "Nasılsın canım?" yazıyor.
-Saat 16:00'da en yakın arkadaşın Kaan arıyor. 2019'da sana beş yüz lira borç verdiğini hatırlamış. Sen hatırlamıyorsun. Çünkü vermedi.
-Akşama doğru telefonunda kırk yedi cevapsız arama var. Otobüse binmiyorsun. Bir milyon dolarlık biri otobüse binmez. Taksi çağırıyorsun.
-`[EKRANDA: Taksinin arka koltuğu. Telefonda araba ilanı. Camın dışında saat 18:24.]`
-18:24'te taksi bir durağın önünden geçiyor. Camdan bir kalabalık görüyorsun, yerde bir şey var. Bir saniye bakıyorsun.
-Sonra ilana geri dönüyorsun. Kırmızı mı alsan, siyah mı?
-`[EKRANDA: Ertesi sabah. Telefonda yerel haber, fotoğrafta yola dağılmış mandalinalar.]`
-Ertesi sabah telefonunda küçük bir yerel haber görüyorsun: Durakta fenalaşan yetmiş bir yaşındaki adama ambulans on iki dakika sonra ulaşmış. Haberin fotoğrafında, yola dağılmış mandalinalar var.
-O durağı tanıyorsun. Dün akşam taksiyle önünden geçtin.
+`[EKRANDA: Bildirim yağmuru. Sayaç hızla artar.]`
+Öğlene kadar, on iki yaşından beri istediğin her şeyi sepete atıyorsun. Öğleden sonra, yarısını neden istediğini hatırlamıyorsun.
+15:00'te ailenin WhatsApp grubu hayata dönüyor. Üç yıldır kimsenin yazmadığı gruba on dört kuzen aynı anda "Nasılsın canım?" yazıyor.
+16:00'da en yakın arkadaşın Kaan arıyor. 2019'da sana beş yüz lira borç verdiğini hatırlamış. Sen hatırlamıyorsun. Çünkü vermedi.
+Akşam olduğunda telefonunda kırk yedi cevapsız arama var. Bir milyon dolarlık biri otobüse binmez. Taksi çağırıyorsun.
+`[EKRANDA: Taksinin arka koltuğu. Telefonda yerel haber. Fotoğrafta yola dağılmış mandalinalar.]`
+Taksi trafikte beklerken telefonunda küçük bir yerel haber çıkıyor: Dün akşam bir otobüs durağında fenalaşan yetmiş bir yaşındaki adama ambulans on iki dakika sonra ulaşmış. Haberin altında tek satır: "Durumu ciddi."
+Fotoğrafta, yola dağılmış mandalinalar var.
+O durağı tanıyorsun. Dün akşam 18:20'de, kulaklığın takılıyken önünden geçtin.
+Telefonu kimin aradığını ve sana neyi kaçırdığını söylemeye çalıştığını şimdi anlıyorsun. Odana dönüyorsun. Kulübe yok. Sadece boş bir kasa var.
 
-### 4:20–4:55 · KAPANIŞ
-`[EKRANDA: Bölünmüş panel. Sol: hastane komodininde bir mandalina. Sağ: telefon ekranında 1.000.000 $ ve haber.]`
-Kasayı açan sen, o haberi okuyup telefonu kapatacak ve günün geri kalanında bir daha düşünmeyecek. Çünkü o adamı hiç tanımadı.
-Kulübeye giren senin ise bir milyon doları yok. Komodininde, Hikmet Bey'in verdiği bir mandalina var. Ve 14 Kasım sabahı 07:12'de uyandığında, odanın ortasında yine iki kapı duruyor. Kulübenin camında yeni bir not var: "Yarın da seçebilirsin."
-`[EKRANDA: A ve B geçitleri, ikisi de parlar. Alt yazı: "A mı, B mi?"]`
+### 4:25–4:55 · KAPANIŞ
+`[EKRANDA: B yoluna dönüş. 14 Kasım, 07:12. Oli'nin odası. Komodinde bir mandalina. Kulübe hâlâ orada, telefon çalıyor.]`
+Kulübeye giren senin ise bir milyon doları yok. Komodininde Hikmet Bey'in verdiği bir mandalina var.
+14 Kasım sabahı 07:12'de uyandığında kulübe hâlâ odanda. Ve telefon yeniden çalıyor.
+Ahizeyi kaldırıyorsun. Bu sefer hattın öbür ucunda kimse konuşmuyor. Seni dinliyorlar.
+Ve o sabah telefonu kimin açtığını, sana kimin "18:20" dediğini o an anlıyorsun. Ahizeye eğilip konuşmaya başlıyorsun.
+`[EKRANDA: A ve B geçitleri, ikisi de parlar. Altyazı: "A mı, B mi?"]`
 Sen olsan hangisini açardın? Yorumlara A ya da B yaz. En çok seçilen kapıyı bir sonraki bölümde yeniden açıyoruz.
 
 ---
 
 ### Kontrol listesi
-- **İlk 15 saniye:** Başlık doğrulandı (milyon dolar ve 24 saat), açık soru var ("hangisi kurtaracak?"), ödül vaat edildi (iki yol da gösterilecek).
-- **Kanal tanıtımı ve abone çağrısı:** yok.
+- **Mantık zinciri:** 14 Kasım'da gelen arama → B yolunda 13 Kasım'ı yeniden yaşamak → durak (13 Kasım 18:24). A yolunda gün 14 Kasım; aynı olayı bir gün sonra haberde görüyorsun. Tarih çelişkisi yok.
+- **Açık soru ve kapanışı:** "18:20'de ne oldu?" sorusu B'de 18:24'te, A'da haberde cevaplanıyor. "Telefonu kim açtı?" sorusu sonda cevaplanıyor: arayan, B yolunu yaşamış sensin.
+- **Seçimin nedeni:** Kendi sesinden gelen bir uyarı. Kasayı açmak üzereyken fikir değiştirmek.
+- **Gerilim tırmanışı:** küçük kaçışlar → piyango başarısızlığı → hafıza haritası siliniyor → 18:20'de hiçbir şey olmuyor → 18:24'te adam düşüyor.
+- **Tekrar eden detaylar:** 07:12, yanık tost, mandalina, telefon kulübesinin zili.
 - **Tek kapanış çağrısı:** "Yorumlara A ya da B yaz."
-- **Hook'un karşılığı:** B yolunda 18:24'te ve A yolunda 18:24'te, aynı an iki yönden.
-- **Gerilim tırmanışı:** küçük kaçışlar → piyango başarısızlığı → harita siliniyor → "adam bugün düşecek mi?" (18:20'de düşmüyor, 18:24'te düşüyor).
-- **Tekrar eden detaylar:** yanık tost, saat 07:12, mandalina.
-- **Ayıklanan yapay zekâ kalıpları:** "Biri sana para verdi, diğeri bir dakika", "X değil Y", tek kelimelik dramatik kapanışlar.
