@@ -49,9 +49,9 @@ function lights(scene, { size = 2048, target = [0, 1.0, 0], box = 2.4 } = {}) {
 const woodA = 0x8a5a3c, woodB = 0x744a30;
 function floorVox() {
   const v = new Vox();
-  for (let x = -28; x <= 27; x++) for (let z = -20; z <= 19; z++) {
-    const tile = ((Math.floor((x + 28) / 8) + Math.floor((z + 20) / 8)) & 1);
-    const grout = ((x + 28) % 8 === 0) || ((z + 20) % 8 === 0);
+  for (let x = -24; x <= 23; x++) for (let z = -17; z <= 16; z++) {
+    const tile = ((Math.floor((x + 24) / 8) + Math.floor((z + 17) / 8)) & 1);
+    const grout = ((x + 24) % 8 === 0) || ((z + 17) % 8 === 0);
     const jit = h3(x, 0, z, 5);
     let top = tile ? 0xeadcb9 : 0xf3e7cb; if (grout) top = 0xd9c79d; else if (jit < .08) top = tile ? 0xe3d3ac : 0xebdfc0;
     v.set(x, -1, z, top);
@@ -61,7 +61,7 @@ function floorVox() {
     if (h3(x, -5, z, 10) < 0.3 && h3(x, -4, z, 8) < 0.7) v.set(x, -5, z, 0x62402a);
   }
   // chip a few edge tiles for a hand-made look
-  for (let x = -28; x <= 27; x++) for (const z of [-20, 19]) if (h3(x, z, 1, 3) < 0.12) { v.del(x, -1, z); }
+  for (let x = -24; x <= 23; x++) for (const z of [-17, 16]) if (h3(x, z, 1, 3) < 0.12) { v.del(x, -1, z); }
   return v;
 }
 function doorVox(col, colS, x0, z0, facing = 1) {
@@ -111,22 +111,22 @@ function panel(rect, setup, cam, light) {
 
 panel(R.idle, (s) => {
   addVox(s, floorVox());
-  addVox(s, doorVox(0x2ec4b6, 0x23a398, 11, -14));
-  addVox(s, crateVox(-23, -9)); addVox(s, crateVox(-19, -13, 5)); addVox(s, plantVox(-24, 2));
+  addVox(s, doorVox(0x2ec4b6, 0x23a398, 9, -12));
+  addVox(s, crateVox(-20, -8)); addVox(s, crateVox(-16, -12, 5)); addVox(s, plantVox(-20, 3));
   const c = createCharacter(); setPose(c, 'idle'); setExpression(c, 'neutral'); s.add(c);
-}, { fov: 16, target: [0, 1.28, 0], vis: 3.9, el: 10, az: 5 }, { target: [0, 0.8, 0], box: 2.4 });
+}, { fov: 16, target: [0, 1.28, 0], vis: 4.1, el: 10, az: 5 }, { target: [0, 0.8, 0], box: 2.4 });
 
 panel(R.point, (s) => {
   addVox(s, floorVox());
-  addVox(s, doorVox(0x2ec4b6, 0x23a398, -25, -14, -1));   // option A (teal) — the one Oli points at
-  addVox(s, doorVox(0xff5d5d, 0xd94848, 11, -14, 1));      // option B (coral)
-  addVox(s, crateVox(17, 2, 6));
+  addVox(s, doorVox(0x2ec4b6, 0x23a398, -22, -12, -1));   // option A (teal) — the one Oli points at
+  addVox(s, doorVox(0xff5d5d, 0xd94848, 9, -12, 1));      // option B (coral)
+  addVox(s, crateVox(15, 3, 6));
   const c = createCharacter(); setPose(c, 'point'); setExpression(c, 'happy'); s.add(c);
-}, { fov: 16, target: [-0.1, 1.28, 0], vis: 3.9, el: 10, az: 0 }, { target: [0, 0.8, 0], box: 2.4 });
+}, { fov: 16, target: [-0.1, 1.28, 0], vis: 4.1, el: 10, az: 0 }, { target: [0, 0.8, 0], box: 2.4 });
 
 for (const [k, ex, yaw] of [['happy', 'happy', -0.16], ['scared', 'scared', 0.14]]) {
   panel(R[k], (s) => { const c = createCharacter(); setExpression(c, ex); c.rotation.y = yaw; s.add(c); },
-    { fov: 14, target: [0, 1.75, 0], vis: 1.55, el: 2, az: 0 }, { size: 1024, target: [0, 1.7, 0], box: 1.6 });
+    { fov: 14, target: [0.1, 1.97, 0], vis: 1.98, el: 2, az: 0 }, { size: 1024, target: [0, 1.7, 0], box: 1.6 });
 }
 
 el('lab', 'idle · front', R.idle[0] + 16, R.idle[1] + R.idle[3] - 48);

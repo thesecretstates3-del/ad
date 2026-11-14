@@ -1,0 +1,115 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli — PENCIL SKETCHBOOK</title></head>
+<body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Graphics, Text, Sprite } from 'pixi.js';
+import { createCharacter, PALETTE as P, SEPIA as GR, makePaperGrain, util } from './character.js';
+const { rng, resample, displace, flat } = util;
+
+const WOBBLE_SEED = 3; // change -> every line re-jitters (animation can cycle 3 seeds for "boiling")
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: '#F7F2E5', preference: 'webgl', antialias: true, resolution: 1 });
+document.body.appendChild(app.canvas);
+Object.assign(window, { app });
+const S = app.stage;
+
+// ---------- helpers: pencil strokes for the sheet furniture ----------
+const R = rng(2024);
+function pencil(g, pts, w = 2, a = 0.75, passes = 2, amp = 1.6, col = GR, closed = false) {
+  const base = resample(pts, closed, 5);
+  for (let k = 0; k < passes; k++) {
+    const p = displace(base, closed, R, amp * (1 + k * 0.7), 60);
+    g.poly(flat(closed ? [...p, p[0], p[1]] : p), false).stroke({ width: w * (1 - k * 0.3), color: col, alpha: a * (1 - k * 0.35), cap: 'round', join: 'round' });
+  }
+}
+const q = (p0, c, p1, n = 14) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * p0[0] + 2 * u * t * c[0] + t * t * p1[0], u * u * p0[1] + 2 * u * t * c[1] + t * t * p1[1]]; });
+function arrow(g, p0, c, p1) {
+  pencil(g, q(p0, c, p1), 2.2, 0.8, 2, 1.2);
+  const a = Math.atan2(p1[1] - c[1], p1[0] - c[0]);
+  for (const s of [-1, 1]) pencil(g, [[p1[0], p1[1]], [p1[0] - Math.cos(a + s * 0.5) * 16, p1[1] - Math.sin(a + s * 0.5) * 16]], 2.2, 0.8, 1, 0.6);
+}
+const MONO = '"Courier 10 Pitch", "Liberation Mono", monospace', NOTE = 'Caladea, Charter, Georgia, serif';
+const txt = (s, size, x, y, o = {}) => {
+  const t = new Text({ text: s, style: { fontFamily: o.font || MONO, fontSize: size, fontStyle: o.italic ? 'italic' : 'normal', fontWeight: o.bold ? '700' : '400', fill: o.fill || GR, letterSpacing: o.ls ?? 4 } });
+  t.alpha = o.alpha ?? 0.9; t.anchor.set(o.ax ?? 0, o.ay ?? 0); t.position.set(x, y); t.rotation = o.rot || 0; (o.parent || S).addChild(t); return t;
+};
+
+// ---------- paper furniture under the drawings: punched holes, page shading ----------
+{
+  const g = new Graphics();
+  for (let i = 0; i < 10; i++) g.rect(0, 0, 50 - i * 5, 1080).fill({ color: '#C8BFA6', alpha: 0.05 }); // spine shading
+  for (const y of [170, 540, 910]) { g.circle(50, y, 17).fill({ color: '#D9D2BE' }); g.circle(50, y, 17).stroke({ width: 2, color: '#B9B09A', alpha: 0.8 }); g.circle(52, y + 2, 14).fill({ color: '#8E8878', alpha: 0.25 }); }
+  S.addChild(g);
+}
+
+// ---------- title ----------
+txt('SKETCHBOOK', 60, 190, 40, { bold: true, ls: 14, alpha: 0.9 });
+txt('oli  /  character study  /  what if…?', 22, 194, 118, { alpha: 0.65, ls: 3, font: NOTE, italic: true });
+{
+  const g = new Graphics();
+  pencil(g, [[192, 168], [330, 164], [470, 170], [640, 163]], 3, 0.8, 3, 1.4);
+  pencil(g, [[210, 178], [420, 176], [610, 180]], 2, 0.5, 2, 1.4);
+  g.poly(flat(resample([[700, 70], [706, 55], [712, 70], [728, 74], [714, 82], [718, 98], [706, 88], [694, 98], [698, 82], [684, 74]], true, 5)), true).stroke({ width: 1.8, color: GR, alpha: 0.6 });
+  S.addChild(g);
+}
+
+// ---------- characters ----------
+function place(ch, cx, groundY, targetH) {
+  const b = ch.parts.hips.getLocalBounds();
+  ch.root.scale.set(targetH / (b.maxY - b.minY)); ch.root.position.set(cx, groundY); S.addChild(ch.root);
+}
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral', wobbleSeed: WOBBLE_SEED });
+place(idle, 390, 1005, 640);
+txt('IDLE', 24, 390, 1030, { ax: 0.5, ls: 12 });
+const pt = createCharacter(app, { pose: 'point', expression: 'happy', wobbleSeed: WOBBLE_SEED });
+place(pt, 860, 1005, 600);
+txt('POINT  /  "i choose this one"', 22, 870, 1032, { ax: 0.5, ls: 4 });
+
+// ---------- ruled-paper lines over the left page (multiply, so they read through marker & graphite) ----------
+{
+  const g = new Graphics();
+  for (let y = 214; y < 1080; y += 46) g.rect(0, y, 1236, 2.2).fill({ color: '#7FA6D6', alpha: 0.5 });
+  g.rect(150, 0, 2.4, 1080).fill({ color: '#E26D6D', alpha: 0.55 }); g.rect(158, 0, 2.4, 1080).fill({ color: '#E26D6D', alpha: 0.4 });
+  g.blendMode = 'multiply'; S.addChild(g);
+}
+// margin notes (pencil arrows + italic notes)
+{
+  const g = new Graphics();
+  txt('the question-mark curl', 25, 520, 300, { font: NOTE, italic: true, ls: 1, alpha: 0.85 });
+  arrow(g, [545, 340], [520, 400], [452, 410]);
+  txt('teal fork pin', 25, 520, 770, { font: NOTE, italic: true, ls: 1, alpha: 0.85 });
+  arrow(g, [540, 805], [490, 790], [440, 752]);
+  txt('coral sole', 25, 172, 926, { font: NOTE, italic: true, ls: 1, alpha: 0.85 });
+  arrow(g, [215, 962], [240, 990], [270, 1000]);
+  S.addChild(g);
+}
+
+// ---------- expression cards (dotted paper, taped on) ----------
+function card(name, expr, x, y, w, h, rot, tape, seed) {
+  const c = new Container(); c.position.set(x + w / 2, y + h / 2); c.rotation = rot; S.addChild(c);
+  const g = new Graphics();
+  for (let i = 0; i < 5; i++) g.rect(-w / 2 + 6 + i * 2, -h / 2 + 8 + i * 2, w, h).fill({ color: '#7A6C50', alpha: 0.05 });
+  g.rect(-w / 2, -h / 2, w, h).fill('#FFFDF6');
+  const dots = new Graphics();
+  for (let yy = -h / 2 + 26; yy < h / 2 - 10; yy += 28) for (let xx = -w / 2 + 26; xx < w / 2 - 10; xx += 28) dots.circle(xx, yy, 1.5).fill({ color: '#7E97B8', alpha: 0.55 });
+  dots.blendMode = 'multiply';
+  const b = [[-w / 2 + 14, -h / 2 + 14], [w / 2 - 14, -h / 2 + 14], [w / 2 - 14, h / 2 - 14], [-w / 2 + 14, h / 2 - 14]];
+  pencil(g, b, 2, 0.55, 3, 1.4, GR, true);
+  c.addChild(g, dots);
+  const ch = createCharacter(app, { pose: 'idle', expression: expr, shadow: false, wobbleSeed: seed });
+  const head = ch.parts.head; head.parent.removeChild(head); head.position.set(0, 0); head.rotation = 0; head.scale.set(1.08);
+  const hc = new Container(); hc.position.set(0, h / 2 - 100); hc.addChild(head); c.addChild(hc);
+  txt(name, 28, 0, h / 2 - 62, { ax: 0.5, ls: 14, parent: c });
+  const tp = new Container(); c.addChild(tp);
+  for (const [tx, ty, tr] of tape) { const tg = new Graphics(); tg.rect(-55, -15, 110, 30).fill({ color: '#2EC4B6', alpha: 0.5 }); for (let i = -50; i < 55; i += 8) tg.moveTo(i, -15).lineTo(i, 15).stroke({ width: 1, color: '#fff', alpha: 0.18 }); tg.position.set(tx, ty); tg.rotation = tr; tp.addChild(tg); }
+}
+card('HAPPY', 'happy', 1262, 40, 618, 488, -0.008, [[-250, -238, -0.5], [250, -238, 0.5]], 600);
+card('SCARED', 'scared', 1262, 556, 618, 488, 0.007, [[-250, -238, -0.5], [250, -238, 0.5]], 700);
+
+// ---------- grain over everything ----------
+{
+  const grain = new Sprite(makePaperGrain(1920, 1080, 17)); grain.blendMode = 'multiply'; S.addChild(grain);
+}
+app.render();
+window.__READY = true;
+</script></body></html>

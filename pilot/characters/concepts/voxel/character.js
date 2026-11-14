@@ -233,18 +233,16 @@ function buildArm() { // left arm (+x): upper, lower, hand — voxel x 8..11
 
   // ---- signature curl: sphere-swept tapered curve in the (y,z) plane, hooking forward like a question mark
   const curl = new Vox();
-  const pv = [0, 42, -1], sc = 20;
+  const pv = [0, 42, -1], sc = 19;
+  // hook drawn in the x-y plane (readable from the front camera), bending towards +x with a slight forward lean
   const cur = new THREE.CatmullRomCurve3([
     [0, -0.12, 0], [0, 0.08, -0.03], [0, 0.3, -0.02], [0, 0.5, 0.05], [0, 0.64, 0.2], [0, 0.6, 0.38], [0, 0.45, 0.43], [0, 0.34, 0.32], [0, 0.37, 0.22],
-  ].map(([x, y, z]) => new THREE.Vector3(x, y * sc, z * sc)));
-  const N = 260, pts = [];
-  for (let i = 0; i <= N; i++) { const u = i / N; const q = cur.getPointAt(u); pts.push({ y: q.y, z: q.z, r: 2.55 * (1 - 0.6 * Math.pow(u, 0.9)) }); }
-  for (let x = -4; x <= 3; x++) for (let y = -6; y <= 22; y++) for (let z = -5; z <= 14; z++) {
-    let hit = false, depth = 1;
-    for (const q of pts) {
-      const d = Math.hypot(x + .5, y + .5 - q.y, z + .5 - q.z);
-      if (d <= q.r) { hit = true; break; }
-    }
+  ].map(([x, y, z]) => new THREE.Vector3(0, y * sc, z * sc)));
+  const N = 300, pts = [];
+  for (let i = 0; i <= N; i++) { const u = i / N; const q = cur.getPointAt(u); pts.push({ y: q.y, x: q.z, z: q.y * 0.06, r: 2.7 * (1 - 0.58 * Math.pow(u, 0.9)) }); }
+  for (let x = -5; x <= 14; x++) for (let y = -6; y <= 22; y++) for (let z = -5; z <= 6; z++) {
+    let hit = false;
+    for (const q of pts) { if (Math.hypot(x + .5 - q.x, y + .5 - q.y, (z + .5 - q.z) * 1.15) <= q.r) { hit = true; break; } }
     if (hit) curl.set(pv[0] + x, pv[1] + y, pv[2] + z, h3(x, y, z, 31) < 0.2 ? P.hairS : (y > 8 && h3(x, y, z, 32) < 0.14 ? 0x5a4235 : P.hair));
   }
   part('hair_curl', 'head', pv, curl);
@@ -266,8 +264,8 @@ function buildArm() { // left arm (+x): upper, lower, hand — voxel x 8..11
     eyes[e] = { L, R };
   }
   const browRows = {
-    neutral: ['XXXX'], happy: ['.XX.', 'X..X'], surprised: ['.XX.', 'X..X'],
-    scared: ['X...', '.XX.', '...X'],
+    neutral: ['XXXX'], happy: ['XXXX'], surprised: ['XXXX'],
+    scared: ['XX..', '.XXX'],
   };
   const browY = { neutral: 34, happy: 35, surprised: 36, scared: 34 };
   const brows = {};
@@ -279,7 +277,7 @@ function buildArm() { // left arm (+x): upper, lower, hand — voxel x 8..11
     neutral: mk(['X..X', '.XX.'], -2, 26, map),
     happy: mk(['XXXXXX', '.XccX.', '..XX..'], -3, 26, map),
     surprised: mk(['.XX.', 'XXXX', '.XX.'], -2, 26, map),
-    scared: mk(['.X.X.X.X', 'X.X.X.X.'], -4, 26, map),
+    scared: mk(['.X.XX.X.', 'X.X..X.X'], -4, 26, map),
   };
   const cheekV = new Vox().box(5, 28, 6, 7, 29, 6, P.blush); cheekV.del(7, 29, 6);
   part('face', 'head', [0, 25, 0], new Vox(), { empty: true });
@@ -344,6 +342,7 @@ export function setExpression(c, name) {
   if (!EXPRESSIONS.includes(name)) throw new Error('unknown expression ' + name);
   const p = c.userData.parts; c.userData.expression = name;
   for (const n of ['eyeL', 'eyeR', 'browL', 'browR', 'mouth']) p[n].userData.mesh.geometry = GEO[n + ':v'][name];
+  p.cheekL.visible = p.cheekR.visible = name !== 'scared';   // face goes pale when scared
 }
 export function blink(c, k = 1) { for (const s of ['L', 'R']) c.userData.parts[`eye${s}`].scale.y = THREE.MathUtils.lerp(1, 0.1, k); }
 
