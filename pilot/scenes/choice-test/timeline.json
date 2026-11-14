@@ -1,0 +1,38 @@
+{
+  "title": "What if you chose 24 hours in the past instead of $1,000,000?",
+  "style": "comic-pop",
+  "resolution": [1920, 1080],
+  "fps": 30,
+  "duration": 20.0,
+  "videoPick": "B",
+  "options": {
+    "A": { "label": "$1,000,000", "color": "#2EC4B6", "prop": "vault door" },
+    "B": { "label": "24 HOURS BACK", "color": "#FF5D5D", "prop": "phone booth" }
+  },
+  "beats": [
+    { "id": "hook", "kind": "hook", "start": 0.0, "end": 7.0, "caption": "Wait… that's ME?!",
+      "events": [
+        { "t": 0.0, "what": "BAM! booth door bursts open, smoke, shake, hit-stop" },
+        { "t": 1.0, "what": "Oli stumbles out, dizzy" },
+        { "t": 3.0, "what": "whip-pan to second Oli with coffee" },
+        { "t": 4.2, "what": "split panels close-ups", "caption": "Wait… that's ME?!" },
+        { "t": 5.6, "what": "WHAT?! burst, cup flies, heavy shake, hit-stop" },
+        { "t": 6.4, "what": "freeze, grey halftone, REWIND stamp", "caption": "How did I get here? Let's rewind." },
+        { "t": 6.75, "what": "frames skip backwards" }
+      ] },
+    { "id": "title", "kind": "title", "start": 7.0, "end": 9.0, "title": "WHAT IF…?", "caption": "$1,000,000… or 24 hours in the past?" },
+    { "id": "choice", "kind": "choice", "start": 9.0, "end": 16.5,
+      "options": { "A": "$1,000,000", "B": "24 HOURS BACK" },
+      "events": [
+        { "t": 9.0, "what": "panels slam in" }, { "t": 9.5, "what": "badge A" }, { "t": 9.9, "what": "badge B" },
+        { "t": 10.0, "what": "Oli glances A then B" }, { "t": 12.0, "what": "leans toward A" },
+        { "t": 13.5, "what": "points at B, THIS ONE!, hit-stop" },
+        { "t": 14.2, "what": "A greys out and dissolves, B expands" }
+      ], "pick": "B" },
+    { "id": "into-b", "kind": "story", "start": 16.5, "end": 20.0, "caption": "Choice locked: B",
+      "events": [
+        { "t": 16.4, "what": "booth door opens, light spills" }, { "t": 16.9, "what": "Oli walks in (on twos)" },
+        { "t": 18.44, "what": "SLAM! rattle, white flash, hit-stop" }, { "t": 19.45, "what": "caption, hold to end" }
+      ] }
+  ]
+}

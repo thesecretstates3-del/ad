@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Choice test — COMIC POP</title></head>
+<body style="margin:0;background:#1E1B24">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application } from 'pixi.js';
+import * as S from './scenes.js';
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: '#FFF4DC', preference: 'webgl', antialias: true, resolution: 1, autoStart: false });
+app.ticker.stop();
+document.body.appendChild(app.canvas);
+window.DURATION = 20.0;
+try { S.init(app); } catch (e) { console.error("STACK " + e.stack); }
+window.renderAt = (t) => { S.render(t); };
+window.renderAt(0);
+window.__READY = true;
+</script></body></html>
