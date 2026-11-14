@@ -1,0 +1,38 @@
+[
+ {
+  "id": "n1",
+  "start": 0.5,
+  "who": "narrator",
+  "text": "Telefonum, bugünün dün olduğunu söylüyor."
+ },
+ {
+  "id": "n2",
+  "start": 4.2,
+  "who": "narrator",
+  "text": "Ve karşımda oturan kişi... benim. Dünkü ben."
+ },
+ {
+  "id": "o1",
+  "start": 8.9,
+  "who": "oli",
+  "text": "Bu... benim!"
+ },
+ {
+  "id": "n3",
+  "start": 10.8,
+  "who": "narrator",
+  "text": "Dur. En baştan anlatayım. Her şey bir seçimle başladı."
+ },
+ {
+  "id": "n4",
+  "start": 16.6,
+  "who": "narrator",
+  "text": "Bir milyon dolar mı? Yoksa yirmi dört saat geri mi?"
+ },
+ {
+  "id": "o2",
+  "start": 22.6,
+  "who": "oli",
+  "text": "Bunu seçiyorum!"
+ }
+]
