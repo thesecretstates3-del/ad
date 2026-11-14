@@ -61,6 +61,8 @@ server.listen(0, async () => {
       const buf = await page.screenshot({ type: 'jpeg', quality: 93 });
       if (!ff.stdin.write(buf)) await new Promise(r => ff.stdin.once('drain', r));
       if (f % 60 === 0) console.log(`frame ${f}/${frames} (${((Date.now() - t0) / 1000).toFixed(0)}s)`);
+      if (f % 10 === 0 || f === frames - 1) try { fs.writeFileSync(`/tmp/render-progress-${process.pid}.json`,
+        JSON.stringify({ out, frame: f + 1, frames, elapsed: (Date.now() - t0) / 1000 })); } catch (e) {}
     }
     ff.stdin.end(); await new Promise(r => ff.on('close', r));
     console.log('wrote', out, 'in', ((Date.now() - t0) / 1000).toFixed(0) + 's');
