@@ -1,0 +1,161 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli — NEON GLOW</title></head>
+<body style="margin:0;background:#0E1222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Graphics, Text, Sprite, BlurFilter, Rectangle } from 'pixi.js';
+import { createCharacter, NEON } from './character.js';
+
+const W = 1920, H = 1080;
+const app = new Application();
+await app.init({ width: W, height: H, background: '#0E1222', preference: 'webgl', antialias: true, resolution: 1 });
+document.body.appendChild(app.canvas);
+Object.assign(window, { app });
+const S = app.stage;
+
+// deterministic PRNG (mulberry32)
+let seed = 20240607;
+const rnd = () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+
+// ---------------- background (not bloomed) ----------------
+const HZ = 640; // horizon
+const bg = new Graphics();
+const bands = 48;
+for (let i = 0; i < bands; i++) { // vertical gradient #0E1222 -> deep purple -> magenta haze at horizon
+  const t = i / (bands - 1), y0 = (HZ + 40) * t, y1 = (HZ + 40) * (i + 1) / bands + 1;
+  const lerp = (a, b, k) => Math.round(a + (b - a) * k);
+  const k = Math.pow(t, 1.8);
+  const c = (lerp(14, 74, k) << 16) | (lerp(18, 20, k) << 8) | lerp(34, 90, k);
+  bg.rect(0, y0, W, y1 - y0).fill(c);
+}
+bg.rect(0, HZ, W, H - HZ).fill('#0B0C1E');
+S.addChild(bg);
+// stars
+const stars = new Graphics();
+for (let i = 0; i < 90; i++) { const x = rnd() * W, y = rnd() * (HZ - 120), r = 0.6 + rnd() * 1.3; stars.circle(x, y, r).fill({ color: '#CFC4FF', alpha: 0.25 + rnd() * 0.5 }); }
+S.addChild(stars);
+// horizon glow + synthwave sun
+const hz = new Graphics();
+for (let i = 0; i < 14; i++) hz.ellipse(W / 2, HZ, 1250 - i * 70, 22 + i * 18).fill({ color: '#FF2FB3', alpha: 0.028 });
+S.addChild(hz);
+const sun = new Container(); S.addChild(sun);
+{
+  const R = 190, cx = 1000, cy = HZ - 60;
+  const g = new Graphics();
+  for (let i = 0; i < 24; i++) { const rr = R + 90 - i * 3.6; g.circle(cx, cy, rr).fill({ color: '#FF3FB4', alpha: 0.012 }); }
+  const sg = new Graphics();
+  const rows = 40;
+  for (let i = 0; i < rows; i++) { // gradient disc via slices
+    const y0 = cy - R + (2 * R * i) / rows, y1 = cy - R + (2 * R * (i + 1)) / rows;
+    const t = i / (rows - 1); const half = (y) => Math.sqrt(Math.max(0, R * R - (y - cy) ** 2));
+    const hw = Math.max(half(y0), half(y1));
+    const mixc = (a, b) => Math.round(a + (b - a) * t);
+    const c = (mixc(255, 176) << 16) | (mixc(170, 40) << 8) | mixc(60, 190);
+    sg.rect(cx - hw, y0, hw * 2, y1 - y0 + 0.5).fill({ color: c, alpha: 0.5 });
+  }
+  const mask = new Graphics().circle(cx, cy, R).fill(0xffffff);
+  sg.mask = mask;
+  // stripes cut into the lower part
+  const cut = new Graphics();
+  for (let i = 0; i < 7; i++) { const y = cy + 10 + i * 24, h = 3 + i * 2.4; cut.rect(cx - R, y, R * 2, h).fill('#12102A'); }
+  cut.mask = mask;
+  sun.addChild(g, sg, mask, cut);
+  // hide under-horizon part
+  S.addChild(new Graphics().rect(0, HZ, W, 12).fill('#0B0C1E'));
+}
+
+// ---------------- neon layer (everything here blooms) ----------------
+const neon = new Container();
+const txt = (s, size, x, y, o = {}) => {
+  const t = new Text({ text: s, style: { fontFamily: 'Trebuchet MS, Verdana, Arial, sans-serif', fontSize: size, fontWeight: '700', fill: o.fill || '#FFE8F6', letterSpacing: o.ls ?? 4 } });
+  t.alpha = o.alpha ?? 1; t.anchor.set(o.ax ?? 0, o.ay ?? 0); t.position.set(x, y); neon.addChild(t); return t;
+};
+const tube = (g, w, col) => { g.stroke({ width: w, color: col, cap: 'round', join: 'round' }); };
+
+// perspective grid floor
+const grid = new Graphics();
+{
+  const VX = W / 2, n = 15;
+  for (let i = 1; i <= n; i++) { // horizontal lines, spacing grows toward viewer
+    const t = Math.pow(i / n, 2.3), y = HZ + (H - HZ) * t;
+    grid.moveTo(0, y).lineTo(W, y).stroke({ width: 1 + t * 2.2, color: '#C04CFF', alpha: 0.25 + 0.5 * t });
+  }
+  for (let i = -26; i <= 26; i++) {
+    const xb = VX + i * 150;
+    grid.moveTo(VX + i * 10, HZ).lineTo(xb, H + 4).stroke({ width: 1.6, color: '#C04CFF', alpha: 0.5 });
+  }
+  grid.moveTo(0, HZ).lineTo(W, HZ).stroke({ width: 3, color: '#FF5CD0', alpha: 0.95 });
+}
+neon.addChild(grid);
+
+// title
+txt('NEON GLOW', 54, 60, 38, { ls: 14, fill: '#FFB0E8' });
+txt('OLI  ·  SYNTHWAVE TUBE STYLE  ·  WHAT IF…?', 17, 64, 112, { alpha: 0.9, ls: 5, fill: '#C9B8FF' });
+{ const g = new Graphics(); g.moveTo(62, 144).lineTo(560, 144); tube(g, 4, NEON.violet); neon.addChild(g); }
+
+// neon signs: A (teal) and B (coral)
+function sign(x, y, label, col, rot) {
+  const c = new Container(); c.position.set(x, y); c.rotation = rot; neon.addChild(c);
+  const g = new Graphics();
+  g.roundRect(-62, -48, 124, 96, 22).stroke({ width: 7, color: col, alpha: 0.9 });
+  g.roundRect(-62, -48, 124, 96, 22).stroke({ width: 2.5, color: '#FFFFFF', alpha: 0.85 });
+  g.moveTo(-34, -48).lineTo(-34, -86).moveTo(34, -48).lineTo(34, -86).stroke({ width: 2.5, color: '#6D6A8A' });
+  c.addChild(g);
+  const t = new Text({ text: label, style: { fontFamily: 'Trebuchet MS, Verdana, sans-serif', fontSize: 78, fontWeight: '800', fill: col, stroke: { color: '#FFFFFF', width: 2 } } });
+  t.anchor.set(0.5); t.position.set(0, 2); c.addChild(t);
+}
+sign(618, 262, 'A', NEON.teal, -0.05);
+sign(1062, 218, 'B', NEON.coral, 0.04);
+
+// ---------------- character placement ----------------
+function place(ch, cx, groundY, targetH) {
+  const b = ch.parts.hips.getLocalBounds();
+  const s = targetH / (b.maxY - b.minY);
+  ch.root.scale.set(s); ch.root.position.set(cx, groundY);
+  neon.addChild(ch.root); return s;
+}
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+place(idle, 330, 1000, 650);
+txt('IDLE', 20, 330, 1020, { ax: 0.5, alpha: 0.8, ls: 8, fill: '#FFC27A' });
+
+const pt = createCharacter(app, { pose: 'point', expression: 'happy' });
+place(pt, 760, 1000, 610);
+txt('POINT  ·  “I CHOOSE THIS ONE”', 20, 800, 1020, { ax: 0.5, alpha: 0.8, ls: 6, fill: '#FFC27A' });
+
+// expression close-ups
+const cells = [{ n: 'happy', x: 1175, c: NEON.hair }, { n: 'scared', x: 1545, c: NEON.cyan }];
+for (const { n, x, c } of cells) {
+  const w = 340, y = 190, h = 520;
+  const fr = new Graphics();
+  fr.roundRect(x, y, w, h, 30).fill({ color: '#080A18', alpha: 0.82 });
+  fr.roundRect(x, y, w, h, 30).stroke({ width: 7, color: c, alpha: 0.9 });
+  fr.roundRect(x, y, w, h, 30).stroke({ width: 2.5, color: '#FFFFFF', alpha: 0.85 });
+  neon.addChild(fr);
+  const ch = createCharacter(app, { pose: 'idle', expression: n, shadow: false });
+  const head = ch.parts.head; head.parent.removeChild(head);
+  head.position.set(0, 0); head.rotation = 0;
+  const b = head.getLocalBounds();
+  const s = Math.min((w - 40) / (b.maxX - b.minX), (h - 90) / (b.maxY - b.minY));
+  head.scale.set(s);
+  head.position.set(x + w / 2 - ((b.minX + b.maxX) / 2) * s, y + (h - 40 - (b.maxY - b.minY) * s) / 2 - b.minY * s + 10);
+  neon.addChild(head);
+  txt(n.toUpperCase(), 28, x + w / 2, y + h + 22, { ax: 0.5, ls: 10, fill: c === NEON.hair ? '#FF8AD8' : '#9DF4FF' });
+}
+
+// ---------------- bloom composite ----------------
+S.addChild(neon);
+const rt = app.renderer.generateTexture({ target: neon, frame: new Rectangle(0, 0, W, H), resolution: 1 });
+const layer = (blur, alpha, q = 4) => {
+  const s = new Sprite(rt); s.blendMode = 'add'; s.alpha = alpha;
+  s.filters = [new BlurFilter({ strength: blur, quality: q })]; return s;
+};
+S.addChildAt(layer(52, 1.0), S.getChildIndex(neon));
+S.addChildAt(layer(20, 1.0), S.getChildIndex(neon));
+S.addChildAt(layer(7, 0.7, 3), S.getChildIndex(neon));
+// subtle vignette
+const vg = new Graphics();
+for (let i = 0; i < 10; i++) vg.rect(-i * 0, 0, W, H).stroke({ width: 40 + i * 30, color: '#04050C', alpha: 0.07 });
+S.addChild(vg);
+
+app.render();
+window.__READY = true;
+</script></body></html>

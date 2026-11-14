@@ -1,0 +1,113 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli — WATERCOLOR STORYBOOK</title></head>
+<body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Graphics, Text, Sprite, BlurFilter } from 'pixi.js';
+import { createCharacter, PALETTE as P, SEPIA, makePaperGrain, wobblyPoly, util } from './character.js';
+const { rng, mix, penLine, flat } = util;
+
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: P.bg, preference: 'webgl', antialias: true, resolution: 1 });
+document.body.appendChild(app.canvas);
+Object.assign(window, { app });
+const S = app.stage;
+
+// ---------- watercolour background (blurred so the washes bleed) ----------
+const bgWash = new Container();
+const wp = (c, pts, color, alpha, seed, amp = 8, wl = 120, edge = 0.0) => {
+  const g = new Graphics(), ring = wobblyPoly(pts, seed, amp, wl);
+  g.poly(flat(ring), true).fill({ color, alpha });
+  if (edge) g.poly(flat(ring), true).stroke({ width: 5, color: mix(color, '#6a5030', 0.4), alpha: edge });
+  c.addChild(g); return g;
+};
+const rect = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1]];
+const ellP = (cx, cy, rx, ry, n = 30) => Array.from({ length: n }, (_, i) => [cx + Math.cos(i / n * 6.2832) * rx, cy + Math.sin(i / n * 6.2832) * ry]);
+// sky: stacked bands, densest at the top
+for (let i = 0; i < 11; i++) wp(bgWash, rect(-60, -60, 1980, 150 + i * 52), '#9CC8E6', 0.085, 100 + i, 14, 260);
+wp(bgWash, ellP(1000, 250, 560, 150), '#F8D7B2', 0.16, 201, 18, 200);
+wp(bgWash, ellP(1000, 270, 420, 110), '#F8D7B2', 0.14, 202, 18, 200);
+wp(bgWash, ellP(250, 120, 330, 90), '#DDE8F2', 0.35, 203, 12, 120);
+wp(bgWash, ellP(1500, 190, 280, 70), '#F6E2C8', 0.3, 204, 12, 120);
+for (const [cx, cy, rx, ry, sd] of [[420, 230, 190, 44, 301], [650, 200, 130, 34, 302], [980, 300, 200, 46, 303], [1130, 262, 120, 30, 304]]) wp(bgWash, ellP(cx, cy, rx, ry), '#FFF8EC', 0.5, sd, 6, 80);
+// far hills + ground
+const hill = (y, color, a, sd) => { const pts = [[-60, y + 30]]; for (let x = 0; x <= 1980; x += 120) pts.push([x, y + Math.sin(x / 310 + sd) * 34 + Math.sin(x / 130 + sd * 2) * 12]); pts.push([1980, 1140], [-60, 1140]); wp(bgWash, pts, color, a, sd, 5, 160, 0.12); };
+for (let k = 0; k < 3; k++) hill(790, '#A9D08E', 0.24, 11 + k * 0.37);
+for (let k = 0; k < 3; k++) hill(880, '#C2DB94', 0.26, 21 + k * 0.41);
+for (let k = 0; k < 4; k++) hill(955, '#EBD59A', 0.3, 31 + k * 0.3);
+wp(bgWash, ellP(330, 1020, 300, 40), '#9FB487', 0.18, 401, 5, 100);
+wp(bgWash, ellP(810, 1022, 300, 38), '#9FB487', 0.18, 402, 5, 100);
+for (const [cx, cy, rx, ry, col, sd] of [[560, 520, 230, 120, '#F7C9A0', 501], [980, 640, 180, 110, '#9ED5CC', 502], [160, 400, 140, 90, '#F2D78A', 503]]) for (let k = 0; k < 3; k++) wp(bgWash, ellP(cx + k * 8, cy + k * 5, rx, ry), col, 0.07, sd + k, 14, 110, 0.1);
+bgWash.filters = [new BlurFilter({ strength: 3.2, quality: 3 })];
+S.addChild(bgWash);
+
+// splatters (deterministic)
+{
+  const g = new Graphics(), r = rng(99);
+  for (let i = 0; i < 46; i++) {
+    const x = r() * 1180 + 20, y = 120 + r() * 880, rad = 1.5 + r() * 5 * r();
+    g.circle(x, y, rad).fill({ color: [P.teal, P.coral, P.hood, '#8FB0C8'][i % 4], alpha: 0.28 + r() * 0.3 });
+  }
+  S.addChild(g);
+}
+
+// ---------- text ----------
+const FONT = 'Charter, Caladea, Georgia, serif';
+const txt = (s, size, x, y, o = {}) => {
+  const t = new Text({ text: s, style: { fontFamily: FONT, fontSize: size, fontStyle: o.italic === false ? 'normal' : 'italic', fontWeight: o.bold ? '700' : '400', fill: o.fill || SEPIA, letterSpacing: o.ls ?? 4 } });
+  t.alpha = o.alpha ?? 0.92; t.anchor.set(o.ax ?? 0, o.ay ?? 0); t.position.set(x, y); S.addChild(t); return t;
+};
+txt('WATERCOLOR', 58, 60, 38, { italic: false, bold: true, ls: 12, alpha: 0.88 });
+txt('Oli  ·  character sheet  ·  what if…?', 22, 64, 112, { alpha: 0.6, ls: 3 });
+{ // brush underline
+  const g = new Graphics(), r = rng(5), pts = [];
+  for (let i = 0; i <= 40; i++) pts.push([62 + i * 10.5, 160 + Math.sin(i * 0.35) * 3 + i * 0.06]);
+  penLine(g, pts, 9, P.teal, 0.38, r, 0.5); penLine(g, pts.map(([x, y]) => [x + 3, y + 3]), 5, P.coral, 0.3, r, 0.5);
+  S.addChild(g);
+}
+
+// ---------- characters ----------
+function place(ch, cx, groundY, targetH) {
+  const b = ch.parts.hips.getLocalBounds();
+  const s = targetH / (b.maxY - b.minY);
+  ch.root.scale.set(s); ch.root.position.set(cx, groundY); S.addChild(ch.root);
+}
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral', wobbleSeed: 3 });
+place(idle, 330, 1005, 640);
+txt('IDLE', 24, 330, 1030, { ax: 0.5, ls: 10 });
+const pt = createCharacter(app, { pose: 'point', expression: 'happy', wobbleSeed: 5 });
+place(pt, 800, 1005, 600);
+txt('POINT  ·  “I choose this one”', 24, 810, 1030, { ax: 0.5, ls: 5 });
+
+// ---------- expression close-ups ----------
+function vignette(x, y, w, h, tint, seed) {
+  const g = new Graphics(), base = rect(x, y, x + w, y + h);
+  g.poly(flat(wobblyPoly(base, seed, 5, 160, 14)), true).fill({ color: '#FFF9EC', alpha: 0.9 });
+  for (let i = 0; i < 4; i++) {
+    const ring = wobblyPoly(rect(x + 8, y + 8, x + w - 8, y + h - 8), seed + 1 + i, 9, 150, 14);
+    g.poly(flat(ring), true).fill({ color: tint, alpha: 0.16 });
+    if (i === 1) g.poly(flat(ring), true).stroke({ width: 4, color: mix(tint, '#6a5030', 0.4), alpha: 0.28 });
+  }
+  g.filters = [new BlurFilter({ strength: 1.2, quality: 2 })];
+  S.addChild(g);
+}
+function closeup(name, expr, x, y, w, h, tint, seed) {
+  vignette(x, y, w, h, tint, seed);
+  const c = createCharacter(app, { pose: 'idle', expression: expr, shadow: false, wobbleSeed: seed });
+  const head = c.parts.head; head.parent.removeChild(head);
+  head.position.set(0, 0); head.rotation = 0; head.scale.set(1.08);
+  const cell = new Container(); cell.position.set(x + w / 2, y + h - 84); cell.addChild(head); S.addChild(cell);
+  txt(name, 28, x + w / 2, y + h - 56, { ax: 0.5, ls: 12 });
+}
+closeup('HAPPY', 'happy', 1250, 34, 630, 494, '#F8D58A', 600);
+closeup('SCARED', 'scared', 1250, 552, 630, 494, '#A9BEE0', 700);
+
+// ---------- paper: soft edge darkening + cold-press grain over everything ----------
+{
+  const g = new Graphics();
+  for (let i = 0; i < 14; i++) g.rect(i * 4, i * 4, 1920 - i * 8, 1080 - i * 8).stroke({ width: 8, color: '#8a6a40', alpha: 0.012 });
+  g.blendMode = 'multiply'; S.addChild(g);
+  const grain = new Sprite(makePaperGrain(1920, 1080, 11)); grain.blendMode = 'multiply'; S.addChild(grain);
+}
+app.render();
+window.__READY = true;
+</script></body></html>

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>CLAYMATION</title>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<style>
+  html,body{margin:0;background:#cdb48c}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+    background:radial-gradient(ellipse at 40% 30%,#e9d6ae,#c9ab7a);
+    font-family:"Trebuchet MS","Segoe UI","DejaVu Sans",sans-serif;color:#3b2a22}
+  canvas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+  .frame{position:absolute;border-radius:6px;pointer-events:none;
+    box-shadow:0 0 0 10px #b98f5c,0 0 0 12px #8e6a3e,0 14px 26px 6px rgba(70,40,10,.35),inset 0 0 40px rgba(60,30,10,.25)}
+  .lab{position:absolute;font-size:17px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    background:#FFF4DC;color:#3b2a22;padding:6px 15px;border-radius:999px;box-shadow:0 3px 0 #b98f5c}
+  .lab.coral{background:#FF5D5D;color:#fff;box-shadow:0 3px 0 #b83d3d}
+  #title{position:absolute;left:46px;top:22px;font-size:42px;font-weight:900;letter-spacing:.2em;color:#4a3022;text-shadow:0 2px 0 #f4e6c4}
+  #sub{position:absolute;left:48px;top:76px;font-size:14px;letter-spacing:.18em;text-transform:uppercase;opacity:.62}
+</style></head>
+<body><div id="stage"></div>
+<script type="module">
+import * as THREE from 'three';
+import { createCharacter, setPose, setExpression, clayMat, forkParts, vnoise, PALETTE } from './character.js';
+
+const W = 1920, H = 1080;
+const stage = document.getElementById('stage');
+const el = (cls, html, x, y) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html;
+  if (x !== undefined) Object.assign(d.style, { left: x + 'px', top: y + 'px' }); stage.appendChild(d); return d; };
+const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+const R = { idle: [40, 130, 590, 910], point: [670, 130, 590, 910], happy: [1300, 130, 580, 435], scared: [1300, 605, 580, 435] };
+
+const canvas = document.createElement('canvas'); stage.appendChild(canvas);
+for (const r of Object.values(R)) { const f = el('frame',''); Object.assign(f.style, { left: r[0] + 'px', top: r[1] + 'px', width: r[2] + 'px', height: r[3] + 'px' }); }
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.0;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
+
+// ---------- set textures ----------
+function feltTex() {
+  const S = 1024, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d');
+  g.fillStyle = '#6c93b8'; g.fillRect(0, 0, S, S);
+  for (let i = 0; i < 26000; i++) {
+    const x = hash(i * 1.3) * S, y = hash(i * 2.7 + 9) * S, a = hash(i * 5.1) * 6.28, l = 3 + hash(i * 7.3) * 9, v = hash(i * 3.9);
+    g.strokeStyle = v > 0.5 ? 'rgba(175,196,214,.22)' : 'rgba(60,82,104,.2)'; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(5, 5); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+function cardboardTex() {
+  const S = 1024, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d');
+  g.fillStyle = '#d6b583'; g.fillRect(0, 0, S, S);
+  for (let x = 0; x < S; x += 8) { g.fillStyle = `rgba(110,70,30,${0.05 + 0.05 * Math.sin(x * 0.8)})`; g.fillRect(x, 0, 4, S); }
+  for (let i = 0; i < 9000; i++) { const x = hash(i * 1.1) * S, y = hash(i * 2.3 + 4) * S, v = hash(i * 4.4) > .5;
+    g.fillStyle = v ? 'rgba(255,235,190,.16)' : 'rgba(90,55,20,.12)'; g.fillRect(x, y, 2 + hash(i) * 5, 1 + hash(i * 3) * 2); }
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(2, 1.4); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+const felt = feltTex(), card = cardboardTex();
+const feltM = new THREE.MeshStandardMaterial({ map: felt, bumpMap: felt, bumpScale: 1.2, roughness: 1 });
+const cardM = new THREE.MeshStandardMaterial({ map: card, roughness: 0.95 });
+
+// ---------- clay prop: tiny phone booth with a door ----------
+function booth(seed) {
+  const g = new THREE.Group();
+  const m = (hex, o) => clayMat(hex, o);
+  const bevel = (w, h, d, r, hex, s) => {
+    const geo = new THREE.BoxGeometry(w, h, d, 24, 24, 24);
+    // soften box into pillowy clay slab
+    const p = geo.attributes.position, v = new THREE.Vector3();
+    for (let i = 0; i < p.count; i++) {
+      v.fromBufferAttribute(p, i);
+      const q = new THREE.Vector3(Math.max(Math.abs(v.x) - (w / 2 - r), 0), Math.max(Math.abs(v.y) - (h / 2 - r), 0), Math.max(Math.abs(v.z) - (d / 2 - r), 0));
+      const l = q.length(); if (l > 0) { q.multiplyScalar(r / l); v.x = Math.sign(v.x) * ((w / 2 - r) * (Math.abs(v.x) < w / 2 - r ? Math.abs(v.x) / (w / 2 - r) : 1) + q.x); v.y = Math.sign(v.y) * ((h / 2 - r) * (Math.abs(v.y) < h / 2 - r ? Math.abs(v.y) / (h / 2 - r) : 1) + q.y); v.z = Math.sign(v.z) * ((d / 2 - r) * (Math.abs(v.z) < d / 2 - r ? Math.abs(v.z) / (d / 2 - r) : 1) + q.z); }
+      v.x += vnoise(v.x * 4, v.y * 4, v.z * 4, s) * 0.012; v.y += vnoise(v.x * 4 + 9, v.y * 4, v.z * 4, s) * 0.012; v.z += vnoise(v.x * 4, v.y * 4 + 5, v.z * 4, s) * 0.012;
+      p.setXYZ(i, v.x, v.y, v.z);
+    }
+    geo.computeVertexNormals();
+    const me = new THREE.Mesh(geo, m(hex)); me.castShadow = me.receiveShadow = true; return me;
+  };
+  const body = bevel(0.62, 1.15, 0.62, 0.07, 0xff5d5d, seed); body.position.y = 0.575; g.add(body);
+  const roof = bevel(0.7, 0.1, 0.7, 0.045, 0xe04a4a, seed + 3); roof.position.y = 1.17; g.add(roof);
+  const door = bevel(0.38, 0.8, 0.05, 0.02, 0xfff4dc, seed + 5); door.position.set(0, 0.5, 0.32); g.add(door);
+  const pane = bevel(0.26, 0.5, 0.04, 0.015, 0x8fd3cc, seed + 7); pane.position.set(0, 0.62, 0.355); g.add(pane);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.03, 20, 14), m(0x2ec4b6)); knob.position.set(0.13, 0.42, 0.37); knob.castShadow = true; g.add(knob);
+  const mark = forkParts(0x2ec4b6, 1.5, 0.8, 90); mark.position.set(0, 1.17, 0.36); mark.scale.setScalar(1.1); g.add(mark);
+  return g;
+}
+function pebble(x, z, s, hex, seed) {
+  const g = new THREE.SphereGeometry(1, 28, 18); g.scale(s, s * 0.7, s * 0.9);
+  const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const n = 1 + 0.07 * vnoise(p.getX(i) * 6, p.getY(i) * 6, p.getZ(i) * 6, seed); p.setXYZ(i, p.getX(i) * n, p.getY(i) * n, p.getZ(i) * n); }
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, clayMat(hex)); m.position.set(x, s * 0.6, z); m.castShadow = m.receiveShadow = true; return m;
+}
+
+function lights(scene, { target = [0, 1.1, 0], box = 3.4, key = 3.2 } = {}) {
+  scene.add(new THREE.HemisphereLight(0xfff0d8, 0xb08a58, 1.0));
+  const k = new THREE.DirectionalLight(0xffdca8, key);
+  k.position.set(-3.5, 6.5, 5); k.target.position.set(...target);
+  k.castShadow = true; k.shadow.mapSize.set(2048, 2048);
+  Object.assign(k.shadow.camera, { left: -box, right: box, top: box, bottom: -box, near: 1, far: 20 });
+  k.shadow.bias = -0.0004; k.shadow.normalBias = 0.02; k.shadow.radius = 6;
+  scene.add(k, k.target);
+  const fill = new THREE.DirectionalLight(0xbfd4ff, 0.7); fill.position.set(5, 2.5, 4); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffc27a, 1.8); rim.position.set(3, 4, -5); rim.target.position.set(...target); scene.add(rim, rim.target);
+}
+function set(scene, { prop = true, propX = 1.15 } = {}) {
+  const table = new THREE.Mesh(new THREE.PlaneGeometry(14, 8), feltM); table.rotation.x = -Math.PI / 2; table.position.z = 1.5; table.receiveShadow = true; scene.add(table);
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 8), cardM); wall.position.set(0, 4, -1.6); wall.receiveShadow = true; scene.add(wall);
+  if (prop) {
+    const b = booth(5); b.position.set(propX, 0, -0.95); b.rotation.y = -0.18 * Math.sign(propX); b.scale.setScalar(0.66); scene.add(b);
+    scene.add(pebble(propX - 0.45*Math.sign(propX), -0.4, 0.1, 0xff5d5d, 1), pebble(propX + 0.1, -0.2, 0.07, 0xf2b33d, 2), pebble(propX - 0.2, 0.05, 0.05, 0x2ec4b6, 3));
+  }
+}
+const panels = [];
+function panel(rect, setup, cam, lopts) {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xd6b583);
+  lights(scene, lopts);
+  const [, , w, h] = rect;
+  const camera = new THREE.PerspectiveCamera(cam.fov, w / h, 0.1, 100);
+  const tgt = new THREE.Vector3(...cam.target), az = (cam.az || 0) * Math.PI / 180, e = cam.el * Math.PI / 180;
+  const d = cam.vis / (2 * Math.tan(cam.fov * Math.PI / 360));
+  camera.position.set(tgt.x + d * Math.cos(e) * Math.sin(az), tgt.y + d * Math.sin(e), tgt.z + d * Math.cos(e) * Math.cos(az));
+  camera.lookAt(tgt); camera.updateMatrixWorld();
+  setup(scene); panels.push({ rect, scene, camera });
+}
+
+panel(R.idle, (s) => { set(s, { propX: 0.8 }); const c = createCharacter(); setPose(c, 'idle'); setExpression(c, 'neutral'); s.add(c); },
+  { fov: 16, target: [0, 1.12, 0], vis: 3.55, el: 8, az: 3 });
+panel(R.point, (s) => { set(s, { propX: -1.0 }); const c = createCharacter(); setPose(c, 'point'); setExpression(c, 'happy'); s.add(c); },
+  { fov: 16, target: [0, 1.1, 0], vis: 3.65, el: 8, az: 0 });
+panel(R.happy, (s) => { set(s, { prop: false }); const c = createCharacter(); setExpression(c, 'happy'); c.rotation.y = -0.2; s.add(c); },
+  { fov: 14, target: [0, 1.98, 0], vis: 1.68, el: 3, az: 0 }, { target: [0, 2.0, 0], box: 2.2 });
+panel(R.scared, (s) => { set(s, { prop: false }); const c = createCharacter(); setExpression(c, 'scared'); c.rotation.y = 0.18; s.add(c); },
+  { fov: 14, target: [0, 1.98, 0], vis: 1.68, el: 3, az: 0 }, { target: [0, 2.0, 0], box: 2.2 });
+
+el('', 'CLAYMATION').id = 'title';
+el('', 'Oli · hand-sculpted plasticine · felt set · stop-motion look').id = 'sub';
+el('lab', 'idle', R.idle[0] + 18, R.idle[1] + R.idle[3] - 52);
+el('lab', 'point · &ldquo;this one&rdquo;', R.point[0] + 18, R.point[1] + R.point[3] - 52);
+el('lab coral', 'happy', R.happy[0] + 18, R.happy[1] + R.happy[3] - 52);
+el('lab coral', 'scared', R.scared[0] + 18, R.scared[1] + R.scared[3] - 52);
+
+renderer.setScissorTest(true);
+setTimeout(() => {
+console.log('build done '+performance.now());
+for (const p of panels) {
+  const [x, y, w, h] = p.rect;
+  renderer.setViewport(x, H - y - h, w, h); renderer.setScissor(x, H - y - h, w, h);
+  renderer.render(p.scene, p.camera);
+}
+console.log('render done '+performance.now());
+window.__READY = true;
+}, 50);
+</script></body></html>
