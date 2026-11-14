@@ -7,11 +7,16 @@
 ---
 
 ### 0:00–0:20 · HOOK
-`[EKRANDA: Bölünmüş panel. Sol: 13 Kasım 18:24, durakta yere düşmüş yaşlı bir adam, yanında diz çökmüş Oli, telefon kulağında, yolda mandalinalar. Sağ: 14 Kasım, taksinin arka koltuğu, Oli'nin telefonunda bir haber fotoğrafı: aynı durak, aynı mandalinalar. Köşede: 1.000.000 $.]`
-Aynı adam. Aynı durak. Yolda aynı mandalinalar.
-Bir versiyonunda, onun yanında diz çökmüşsün ve ambulansı arıyorsun.
-Diğerinde, onu ertesi gün bir haber fotoğrafında görüyorsun. Hesabında bir milyon dolar varken.
-İki versiyon da aynı sabah, aynı telefonla başladı.
+`[EKRANDA: Akşam. Bir otobüs durağı, kalabalık bulanık. Yaşlı adam GÖSTERİLMEZ. Köşede dijital saat: 18:19:48, saniyeler akıyor. Oli'nin yüzüne yakın çekim, nefes nefese, etrafa bakıyor.]`
+Saat 18:19. Bir otobüs durağındasın ve kalbin küt küt atıyor.
+Bu günü daha önce yaşadın. Dün. Ama dün burada ne olduğunu hatırlamıyorsun.
+Tek bildiğin, bu sabah telefondaki sesin sana söylediği şey: "Saat 18:20'de bir şeyi kaçırdın."
+Ve o ses, senin sesindi.
+`[EKRANDA: Saat 18:20:00 olur. Ses kesilir. Kamera durağı yavaşça tarar. Hiçbir şey olmaz.]`
+18:20. Hiçbir şey olmuyor.
+Bu bir dakika için, bu sabah bir milyon dolardan vazgeçtin.
+`[EKRANDA: Donma. Geri sarma.]`
+Ama dur. En baştan anlatayım.
 
 ### 0:20–0:45 · SEÇİM
 `[EKRANDA: 14 Kasım, 07:12. Oda. Geçitler belirir: A, turkuaz kasa "1.000.000 $". B, mercan telefon kulübesi, tepesinde geriye dönen saat "−24 SAAT".]`
@@ -46,7 +51,8 @@ O an kuralı anlıyorsun. Bir şeye dokunduğunda, ondan sonra gelen her şey ye
 Bu da bir sorun. Çünkü elindeki tek ipucu bir saat: 18:20. Ne olacağını bilmiyorsun. Ve artık dünün aynen tekrar edeceğinden de emin değilsin.
 `[EKRANDA: Akşam. Durak. Köşede 18:10.]`
 18:10'da, dün kulaklıkla yürüdüğün yoldasın. Yolun ortasında bir otobüs durağı var. Bankta, kucağında mandalina poşetiyle yaşlı bir adam oturuyor. Dün buradan geçtin. Onu hiç fark etmedin.
-18:19. 18:20. Hiçbir şey olmuyor.
+18:19. Kalbin küt küt atıyor. 18:20. Hiçbir şey olmuyor.
+`[EKRANDA: Hook anı, şimdi bağlamıyla. Bu kez bankta oturan adam görünür.]`
 18:21'de adam kalkıp otobüs tarifesine bakıyor. Belki bugün bir şey olmayacak. Belki piyangoyla birlikte bunu da değiştirdin.
 18:24'te yere düşüyor. Mandalinalar yola dağılıyor. Durakta on bir kişi var. Kimse kıpırdamıyor.
 Sen zaten yanındasın. Telefon zaten elinde. Ambulans dört dakikada geliyor.
