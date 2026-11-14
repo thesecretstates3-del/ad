@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>LOW-POLY 3D</title>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js"}}</script>
+<style>
+  html,body{margin:0;background:#F4EAD5}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#F4EAD5;
+    font-family:"Trebuchet MS","Segoe UI","DejaVu Sans",sans-serif;color:#1E1B24}
+  canvas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+  .card{position:absolute;border-radius:20px;background:rgba(255,250,238,.55);box-shadow:inset 0 0 0 2px rgba(120,90,50,.14)}
+  .lab{position:absolute;font-size:15px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    background:#1E1B24;color:#FFF4DC;padding:5px 12px;border-radius:999px}
+  .lab.teal{background:#2EC4B6;color:#1E1B24}
+  .joint{position:absolute;font:600 11px "DejaVu Sans Mono",monospace;color:#1E1B24;white-space:nowrap}
+  #title{position:absolute;left:44px;top:26px;font-size:40px;font-weight:800;letter-spacing:.22em}
+  #sub{position:absolute;left:46px;top:76px;font-size:14px;letter-spacing:.18em;text-transform:uppercase;opacity:.62}
+</style></head>
+<body><div id="stage"></div>
+<script type="module">
+import * as THREE from 'three';
+import { createCharacter, setPose, setExpression, explode, addPivotMarkers, skeletonLines, EXPRESSIONS } from './character.js';
+
+const W = 1920, H = 1080;
+const stage = document.getElementById('stage');
+const el = (cls, html, x, y, w, h) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html;
+  Object.assign(d.style, { left: x + 'px', top: y + 'px', ...(w ? { width: w + 'px', height: h + 'px' } : {}) }); stage.appendChild(d); return d; };
+
+const R = { idle: [30, 118, 530, 932], point: [575, 118, 530, 932],
+  heads: [[1130, 118, 375, 240], [1515, 118, 375, 240], [1130, 366, 375, 240], [1515, 366, 375, 240]], rig: [1130, 614, 760, 436] };
+for (const r of [R.idle, R.point, ...R.heads, R.rig]) el('card', '', ...r);
+
+const canvas = document.createElement('canvas'); stage.appendChild(canvas);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
+
+// soft contact-shadow blob texture
+const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+{ const g = cv.getContext('2d'), gr = g.createRadialGradient(64, 64, 4, 64, 64, 62);
+  gr.addColorStop(0, 'rgba(70,40,20,.5)'); gr.addColorStop(.55, 'rgba(70,40,20,.2)'); gr.addColorStop(1, 'rgba(70,40,20,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
+const blobTex = new THREE.CanvasTexture(cv); blobTex.colorSpace = THREE.SRGBColorSpace;
+
+function lights(scene, { size = 2048, target = [0, 1.2, 0], box = 3.2 } = {}) {
+  scene.add(new THREE.HemisphereLight(0xfff2dc, 0xcdb48c, 1.15));
+  const key = new THREE.DirectionalLight(0xffe3bc, 3.1);
+  key.position.set(-1.5, 9, 3.5); key.target.position.set(...target);
+  key.castShadow = true; key.shadow.mapSize.set(size, size);
+  Object.assign(key.shadow.camera, { left: -box, right: box, top: box, bottom: -box, near: 1, far: 25 });
+  key.shadow.bias = -0.0004; key.shadow.normalBias = 0.025; key.shadow.radius = 5;
+  scene.add(key, key.target);
+  const fill = new THREE.DirectionalLight(0xcfe2ff, 1.0); fill.position.set(6, 2.5, 5); scene.add(fill);
+  const rim = new THREE.DirectionalLight(0xffcf98, 2.4); rim.position.set(4.5, 5, -6); rim.target.position.set(...target); scene.add(rim, rim.target);
+}
+function ground(scene) {
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.ShadowMaterial({ color: 0x5a3a20, opacity: 0.3 }));
+  sh.rotation.x = -Math.PI / 2; sh.receiveShadow = true; scene.add(sh);
+  const bl = new THREE.Mesh(new THREE.PlaneGeometry(2.3, 1.7), new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, toneMapped: false }));
+  bl.rotation.x = -Math.PI / 2; bl.position.y = 0.002; scene.add(bl);
+}
+const panels = [];
+function panel(rect, setup, cam, opts = {}) {
+  const scene = new THREE.Scene();
+  lights(scene, opts.light);
+  const [x, y, w, h] = rect;
+  const camera = new THREE.PerspectiveCamera(cam.fov, w / h, 0.1, 100);
+  const tgt = new THREE.Vector3(...cam.target), az = (cam.az || 0) * Math.PI / 180, el_ = cam.el * Math.PI / 180;
+  const d = cam.vis / (2 * Math.tan(cam.fov * Math.PI / 360));
+  camera.position.set(tgt.x + d * Math.cos(el_) * Math.sin(az), tgt.y + d * Math.sin(el_), tgt.z + d * Math.cos(el_) * Math.cos(az));
+  camera.lookAt(tgt); camera.updateMatrixWorld(); camera.updateProjectionMatrix();
+  setup(scene);
+  panels.push({ rect, scene, camera });
+  return { scene, camera };
+}
+
+// 1. idle
+panel(R.idle, (s) => { const c = createCharacter(); setPose(c, 'idle'); s.add(c); ground(s); },
+  { fov: 16, target: [0, 1.12, 0], vis: 3.62, el: 9, az: 4 });
+// 2. point (three-quarter)
+panel(R.point, (s) => { const c = createCharacter(); setPose(c, 'point'); setExpression(c, 'happy'); s.add(c); ground(s); },
+  { fov: 16, target: [0.05, 1.1, 0], vis: 3.9, el: 9, az: 0 });
+// 3. expressions
+const yaw = [-0.22, 0.2, -0.16, 0.2];
+EXPRESSIONS.forEach((n, i) => {
+  panel(R.heads[i], (s) => { const c = createCharacter(); setExpression(c, n); c.rotation.y = yaw[i]; s.add(c); },
+    { fov: 14, target: [0, 1.93, 0], vis: 1.55, el: 3, az: 0 }, { light: { size: 1024, target: [0, 1.9, 0], box: 1.6 } });
+  const r = R.heads[i]; el('lab', n, r[0] + 12, r[1] + r[3] - 40);
+});
+// 4. exploded rig
+let rigPanel;
+{ const c = createCharacter(); setPose(c, 'idle'); explode(c, 1); addPivotMarkers(c);
+  rigPanel = panel(R.rig, (s) => { s.add(c); s.add(skeletonLines(c)); },
+    { fov: 16, target: [0.0, 1.3, 0], vis: 3.8, el: 8, az: 12 }, { light: { size: 2048, target: [0, 1.5, 0], box: 3.6 } });
+  rigPanel.char = c;
+  // joint names projected onto the panel
+  const [rx, ry, rw, rh] = R.rig; const v = new THREE.Vector3();
+  for (const n of ['root', 'hips', 'torso', 'head', 'hair_curl', 'armL_upper', 'armL_lower', 'handL', 'legL_upper', 'legL_lower', 'footL']) {
+    c.userData.parts[n].getWorldPosition(v); v.project(rigPanel.camera);
+    const off = { hair_curl: [-110, -40], hips: [-40, 6], torso: [-46, -16], legL_upper: [-90, -7], handL: [14, 2] }[n] || [14, -7];
+    el('joint', n, rx + (v.x * 0.5 + 0.5) * rw + off[0], ry + (-v.y * 0.5 + 0.5) * rh + off[1]);
+  }
+}
+
+el('lab', 'idle · front', R.idle[0] + 14, R.idle[1] + R.idle[3] - 44);
+el('lab', 'point · 3/4', R.point[0] + 14, R.point[1] + R.point[3] - 44);
+el('lab teal', 'rig · exploded + pivots', R.rig[0] + 14, R.rig[1] + 12);
+el('', 'LOW-POLY 3D', 0, 0).id = 'title';
+el('', 'Oli · flat-shaded primitives · three.js r187 · procedural rig', 0, 0).id = 'sub';
+document.getElementById('title').removeAttribute('style'); document.getElementById('sub').removeAttribute('style');
+
+renderer.setScissorTest(true);
+for (const p of panels) {
+  const [x, y, w, h] = p.rect;
+  renderer.setViewport(x, H - y - h, w, h); renderer.setScissor(x, H - y - h, w, h);
+  renderer.render(p.scene, p.camera);
+}
+window.__READY = true;
+</script></body></html>
