@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>HOLOGRAM HUD</title>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<style>
+  :root{--teal:#2EC4B6;--coral:#FF5D5D;--navy:#0E1222;--ice:#BFFFF8}
+  html,body{margin:0;background:#0E1222}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:#0E1222;
+    font-family:"DejaVu Sans Mono","Consolas","Courier New",monospace;color:var(--ice)}
+  canvas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+  .abs{position:absolute}
+  .grid{background-image:linear-gradient(rgba(46,196,182,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(46,196,182,.06) 1px,transparent 1px);background-size:48px 48px}
+  .scan{pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,0) 0 3px,rgba(0,0,0,.10) 3px 4px)}
+  .vig{pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%)}
+  .br{position:absolute;width:34px;height:34px;border:0 solid var(--teal);filter:drop-shadow(0 0 6px rgba(46,196,182,.9))}
+  .br.tl{left:0;top:0;border-left-width:3px;border-top-width:3px}.br.tr{right:0;top:0;border-right-width:3px;border-top-width:3px}
+  .br.bl{left:0;bottom:0;border-left-width:3px;border-bottom-width:3px}.br.brr{right:0;bottom:0;border-right-width:3px;border-bottom-width:3px}
+  .coral .br{border-color:var(--coral);filter:drop-shadow(0 0 6px rgba(255,93,93,.9))}
+  .frame{position:absolute;box-shadow:inset 0 0 0 1px rgba(46,196,182,.22);background:linear-gradient(180deg,rgba(46,196,182,.045),rgba(46,196,182,0) 40%)}
+  .tag{position:absolute;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#7fe8dd;text-shadow:0 0 8px rgba(46,196,182,.8);white-space:nowrap}
+  .tag.c{color:#ff9a9a;text-shadow:0 0 8px rgba(255,93,93,.8)}
+  .lab{position:absolute;font-size:20px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;padding:6px 14px 6px 16px;
+    color:#0E1222;background:var(--teal);box-shadow:0 0 18px rgba(46,196,182,.7);clip-path:polygon(0 0,100% 0,calc(100% - 10px) 100%,0 100%)}
+  .lab.c{background:var(--coral);box-shadow:0 0 18px rgba(255,93,93,.7)}
+  .chip{position:absolute;display:flex;font-size:15px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;filter:drop-shadow(0 0 8px rgba(46,196,182,.55))}
+  .chip span{padding:7px 16px;border:2px solid}
+  .chip .a{background:var(--teal);color:#0E1222;border-color:var(--teal)}
+  .chip .b{background:rgba(255,93,93,.12);color:#ff8f8f;border-color:var(--coral);border-left:0}
+  .ret{position:absolute;width:74px;height:74px;margin:-37px 0 0 -37px;border:2px solid var(--teal);border-radius:50%;box-shadow:0 0 14px rgba(46,196,182,.8), inset 0 0 12px rgba(46,196,182,.4)}
+  .ret::before,.ret::after{content:"";position:absolute;background:var(--teal)}
+  .ret::before{left:50%;top:-14px;width:2px;height:12px}.ret::after{top:50%;left:-14px;height:2px;width:12px}
+  .ruler{position:absolute;width:14px;background:repeating-linear-gradient(180deg,rgba(46,196,182,.7) 0 2px,transparent 2px 14px)}
+  #title{position:absolute;left:46px;top:24px;font-size:40px;font-weight:700;letter-spacing:.24em;color:#E8FFFC;text-shadow:0 0 16px rgba(46,196,182,.95),0 0 40px rgba(46,196,182,.5)}
+  #sub{position:absolute;left:48px;top:80px;font-size:13px;letter-spacing:.24em;text-transform:uppercase;color:#6fd9cf}
+</style></head>
+<body><div id="stage"></div>
+<script type="module">
+import * as THREE from 'three';
+import { createCharacter, setPose, setExpression, setHoloTime, HOLO } from './character.js';
+
+const W = 1920, H = 1080;
+const stage = document.getElementById('stage');
+const el = (cls, html, x, y, w, h, parent = stage) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html;
+  Object.assign(d.style, { left: x + 'px', top: y + 'px', ...(w ? { width: w + 'px', height: h + 'px' } : {}) }); parent.appendChild(d); return d; };
+el('abs grid', '', 0, 0, W, H);
+
+const R = { idle: [30, 118, 560, 932], point: [610, 118, 560, 932], happy: [1210, 118, 680, 440], scared: [1210, 590, 680, 440] };
+for (const r of Object.values(R)) el('frame', '', ...r);
+
+const canvas = document.createElement('canvas'); stage.appendChild(canvas);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false); renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.NoToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+// ---- deterministic PRNG ----
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+
+const ADD = { transparent: true, blending: THREE.AdditiveBlending, depthWrite: false };
+const T = HOLO.uTime;
+// soft backdrop glow
+function backdrop(scene, y, size) {
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.ShaderMaterial({ ...ADD,
+    vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: 'varying vec2 vUv; void main(){ float d=length(vUv-0.5)*2.0; float a=pow(max(1.0-d,0.0),2.2)*0.34; gl_FragColor=vec4(vec3(0.10,0.55,0.55)*a*1.6,1.0); }' }));
+  m.position.set(0, y, -2.2); scene.add(m);
+}
+// projector pad + floor grid + beam + motes
+function stageProps(scene) {
+  const pad = new THREE.Mesh(new THREE.CircleGeometry(0.98, 96).rotateX(-Math.PI / 2), new THREE.ShaderMaterial({ ...ADD, uniforms: { uTime: T },
+    vertexShader: 'varying vec2 vP; void main(){ vP = position.xz; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: `uniform float uTime; varying vec2 vP;
+      void main(){
+        float r = length(vP) / 0.98; float ang = atan(vP.y, vP.x);
+        vec3 teal = vec3(0.18,0.77,0.71), coral = vec3(1.0,0.36,0.36);
+        float disc = (1.0 - smoothstep(0.0, 0.92, r)) * 0.28;                       // soft fill
+        float ring1 = smoothstep(0.015, 0.0, abs(r - 0.93));                          // outer ring
+        float ring2 = smoothstep(0.012, 0.0, abs(r - 0.74)) * 0.8;
+        float ring3 = smoothstep(0.01, 0.0, abs(r - 0.55)) * 0.55;
+        float tk = step(0.55, fract((ang + uTime * 0.15) * 24.0 / 6.2832)) * smoothstep(0.02,0.0,abs(r - 0.84)) ;   // tick band
+        float arc = step(0.0, sin(ang * 1.0 + 0.6)) * smoothstep(0.03, 0.0, abs(r - 0.99)) ;                      // coral half-arc
+        float sweep = pow(max(0.0, cos(ang - uTime * 0.7)), 16.0) * (1.0 - smoothstep(0.0, 0.92, r)) * 0.35;      // radar sweep
+        vec3 c = teal * (disc + ring1 * 1.3 + ring2 + ring3 + tk * 0.9 + sweep) + coral * arc * 1.1;
+        c *= 1.0 - smoothstep(0.98, 1.0, r);
+        gl_FragColor = vec4(c, 1.0);
+      }` }));
+  pad.position.y = 0.004; scene.add(pad);
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(14, 14).rotateX(-Math.PI / 2), new THREE.ShaderMaterial({ ...ADD,
+    vertexShader: 'varying vec2 vP; void main(){ vP = position.xz; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: `varying vec2 vP; void main(){ vec2 g = abs(fract(vP * 1.6) - 0.5); float l = smoothstep(0.03, 0.0, min(g.x, g.y) - 0.47 + 0.03);
+      vec2 q = abs(fract(vP*1.6)-0.5); float line = max(smoothstep(0.47,0.5,q.x), smoothstep(0.47,0.5,q.y));
+      float fade = pow(max(0.0,1.0-length(vP)/5.5),1.6); gl_FragColor = vec4(vec3(0.1,0.5,0.55)*line*fade*0.55,1.0); }` }));
+  floor.position.y = 0.001; scene.add(floor);
+  const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.05, 3.2, 64, 1, true), new THREE.ShaderMaterial({ ...ADD, side: THREE.BackSide,
+    vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+    fragmentShader: `varying vec2 vUv; void main(){ float v = vUv.y; float a = pow(1.0 - v, 1.5) * 0.17; float s = 0.65 + 0.35 * sin(vUv.x * 160.0);
+      gl_FragColor = vec4(vec3(0.15,0.75,0.7) * a * s, 1.0); }` }));
+  beam.position.y = 1.6; scene.add(beam);
+  // motes
+  const rnd = mulberry32(7), N = 90, pos = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) { const a = rnd() * 6.2832, r = 0.45 + rnd() * 0.75; pos[i * 3] = Math.cos(a) * r; pos[i * 3 + 1] = 0.1 + rnd() * 2.9; pos[i * 3 + 2] = Math.sin(a) * r; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color: 0x7ff2e6, size: 0.022, transparent: true, opacity: 0.75, blending: THREE.AdditiveBlending, depthWrite: false })));
+}
+
+const panels = [];
+function panel(rect, setup, cam, opts = {}) {
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x0e1222);
+  const [, , w, h] = rect;
+  const camera = new THREE.PerspectiveCamera(cam.fov, w / h, 0.1, 100);
+  const tgt = new THREE.Vector3(...cam.target), az = (cam.az || 0) * Math.PI / 180, el_ = cam.el * Math.PI / 180;
+  const d = cam.vis / (2 * Math.tan(cam.fov * Math.PI / 360));
+  camera.position.set(tgt.x + d * Math.cos(el_) * Math.sin(az), tgt.y + d * Math.sin(el_), tgt.z + d * Math.cos(el_) * Math.cos(az));
+  camera.lookAt(tgt); camera.updateMatrixWorld();
+  backdrop(scene, opts.bdY ?? 1.5, opts.bdSize ?? 6);
+  const char = setup(scene);
+  const p = { rect, scene, camera, band: opts.band ?? 1.0, char }; panels.push(p); return p;
+}
+const full = { fov: 16, vis: 3.55, el: 7 };
+panel(R.idle, (s) => { const c = createCharacter(); setPose(c, 'idle'); setExpression(c, 'neutral'); s.add(c); stageProps(s); return c; },
+  { ...full, target: [0, 1.25, 0], az: 5 }, { band: 0.62 });
+const pt = panel(R.point, (s) => { const c = createCharacter(); setPose(c, 'point'); setExpression(c, 'happy'); s.add(c); stageProps(s); return c; },
+  { ...full, target: [-0.1, 1.25, 0], az: 0 }, { band: 1.12 });
+const headCam = { fov: 14, target: [0, 1.9, 0], vis: 1.78, el: 2, az: 0 };
+panel(R.happy, (s) => { const c = createCharacter(); setExpression(c, 'happy'); c.rotation.y = -0.25; s.add(c); return c; }, headCam, { band: 1.22, bdY: 1.8, bdSize: 4.5 });
+panel(R.scared, (s) => { const c = createCharacter(); setExpression(c, 'scared'); c.rotation.y = 0.22; s.add(c); return c; }, headCam, { band: 1.22, bdY: 1.8, bdSize: 4.5 });
+
+// ---------------- HUD overlay ----------------
+function brackets(rect, cls = '') {
+  const [x, y, w, h] = rect; const d = el('abs ' + cls, '', x - 6, y - 6, w + 12, h + 12);
+  d.innerHTML = '<i class="br tl"></i><i class="br tr"></i><i class="br bl"></i><i class="br brr"></i>';
+}
+brackets(R.idle); brackets(R.point); brackets(R.happy); brackets(R.scared, 'coral');
+// side rulers
+for (const r of [R.idle, R.point]) { el('ruler', '', r[0] + 14, r[1] + 120, 14, 560); el('ruler', '', r[0] + r[2] - 28, r[1] + 120, 14, 560); }
+// tags
+el('tag', 'sys // holo-projector 01', R.idle[0] + 44, R.idle[1] + 14);
+el('tag', 'subject: oli', R.idle[0] + R.idle[2] - 190, R.idle[1] + 14);
+el('tag', 'sync 100%', R.point[0] + 44, R.point[1] + 14);
+el('tag', 'pose: point', R.point[0] + R.point[2] - 190, R.point[1] + 14);
+el('tag', 'face scan // ok', R.happy[0] + R.happy[2] - 250, R.happy[1] + 14);
+el('tag c', 'face scan // alert', R.scared[0] + R.scared[2] - 270, R.scared[1] + 14);
+el('lab', 'happy', R.happy[0] + 24, R.happy[1] + R.happy[3] - 56);
+el('lab c', 'scared', R.scared[0] + 24, R.scared[1] + R.scared[3] - 56);
+el('lab', 'idle', R.idle[0] + 24, R.idle[1] + R.idle[3] - 56);
+el('lab', 'point', R.point[0] + 24, R.point[1] + R.point[3] - 56);
+// option chip (top of point panel)
+const chip = el('chip', '<span class="a">Option A</span><span class="b">Option B</span>', R.point[0] + 140, R.point[1] + 52);
+// reticle on the pointing hand
+{ const v = new THREE.Vector3(); pt.char.updateMatrixWorld(true); pt.char.userData.parts.handR.userData.index.getWorldPosition(v);
+  v.y -= 0.0; v.project(pt.camera); const [x, y, w, h] = R.point;
+  const px = x + (v.x * 0.5 + 0.5) * w, py = y + (-v.y * 0.5 + 0.5) * h;
+  el('ret', '', px, py); el('tag', 'A', px - 6, py - 64); }
+el('', 'HOLOGRAM // GAME-HUD', 0, 0).id = 'title';
+el('', 'Oli · additive fresnel projection · scanlines · projector pad · three.js', 0, 0).id = 'sub';
+for (const id of ['title', 'sub']) document.getElementById(id).removeAttribute('style');
+el('abs scan', '', 0, 0, W, H); el('abs vig', '', 0, 0, W, H);
+
+renderer.setScissorTest(true);
+for (const p of panels) {
+  const [x, y, w, h] = p.rect;
+  setHoloTime(3.1, p.band);
+  renderer.setViewport(x, H - y - h, w, h); renderer.setScissor(x, H - y - h, w, h);
+  renderer.render(p.scene, p.camera);
+}
+window.__READY = true;
+</script></body></html>

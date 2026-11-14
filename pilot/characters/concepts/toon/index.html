@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>TOON CEL-SHADED</title>
+<script type="importmap">{"imports":{"three":"/node_modules/three/build/three.module.js","three/addons/":"/node_modules/three/examples/jsm/"}}</script>
+<style>
+  html,body{margin:0;background:#F6D9A8}
+  #stage{position:relative;width:1920px;height:1080px;overflow:hidden;
+    background:linear-gradient(180deg,#FFD9A0 0%,#FFC38A 38%,#F7A98B 64%,#E58C86 100%);
+    font-family:"Trebuchet MS","Segoe UI","DejaVu Sans",sans-serif;color:#1E1B24}
+  canvas{position:absolute;left:0;top:0;width:1920px;height:1080px}
+  .sun{position:absolute;left:1180px;top:60px;width:340px;height:340px;border-radius:50%;background:#FFF0C9;opacity:.65}
+  .sun.b{left:1210px;top:90px;width:280px;height:280px;background:#FFF7DE;opacity:.7}
+  .hill{position:absolute;border-radius:50%}
+  .cloud{position:absolute;height:46px;border-radius:30px;background:#FFF1DA;opacity:.8}
+  .card{position:absolute;border-radius:26px;background:rgba(255,244,226,.30);box-shadow:inset 0 0 0 3px rgba(30,27,36,.85),6px 8px 0 rgba(30,27,36,.22)}
+  .lab{position:absolute;font-size:17px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;
+    background:#1E1B24;color:#FFF4DC;padding:7px 16px;border-radius:999px}
+  .lab.teal{background:#2EC4B6;color:#1E1B24}.lab.coral{background:#FF5D5D;color:#1E1B24}
+  #title{position:absolute;left:46px;top:26px;font-size:42px;font-weight:900;letter-spacing:.2em;color:#1E1B24;
+    text-shadow:3px 3px 0 #FFF1DA}
+  #sub{position:absolute;left:48px;top:80px;font-size:14px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;opacity:.7}
+</style></head>
+<body><div id="stage"></div>
+<script type="module">
+import * as THREE from 'three';
+import { createCharacter, setPose, setExpression, setOutline } from './character.js';
+
+const W = 1920, H = 1080;
+const stage = document.getElementById('stage');
+const el = (cls, html, x, y, w, h) => { const d = document.createElement('div'); d.className = cls; d.innerHTML = html;
+  Object.assign(d.style, { left: x + 'px', top: y + 'px', ...(w ? { width: w + 'px', height: h + 'px' } : {}) }); stage.appendChild(d); return d; };
+// flat decor
+el('sun', '', 0, 0); el('sun b', '', 0, 0);
+for (const [x, y, w] of [[780, 130, 230], [1560, 200, 190], [120, 960, 0], [380, 70, 160]]) if (w) el('cloud', '', x, y, w, 46);
+const hill = (x, y, w, h, c) => { const d = el('hill', '', x, y, w, h); d.style.background = c; };
+hill(-300, 900, 1500, 600, '#E88A7E'); hill(700, 940, 1700, 600, '#D9766F');
+
+const R = { idle: [30, 118, 560, 932], point: [610, 118, 560, 932], happy: [1210, 118, 680, 440], scared: [1210, 590, 680, 440] };
+for (const r of Object.values(R)) el('card', '', ...r);
+
+const canvas = document.createElement('canvas'); stage.appendChild(canvas);
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+renderer.setClearColor(0x000000, 0);
+renderer.toneMapping = THREE.NoToneMapping; renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap;
+
+function lights(scene, { target = [0, 1.2, 0], box = 3.2 } = {}) {
+  scene.add(new THREE.AmbientLight(0xd6c6ee, 1.5));
+  const key = new THREE.DirectionalLight(0xfff0dc, 1.9);
+  key.position.set(-2.6, 4.2, 5); key.target.position.set(...target);
+  key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
+  Object.assign(key.shadow.camera, { left: -box, right: box, top: box, bottom: -box, near: 1, far: 25 });
+  key.shadow.bias = -0.002; key.shadow.normalBias = 0.07;
+  scene.add(key, key.target);
+}
+function ground(scene) {
+  // flat cel contact shadow: hard-edged ellipse
+  const sh = new THREE.Mesh(new THREE.CircleGeometry(1, 48), new THREE.MeshBasicMaterial({ color: 0x8a3f4f, transparent: true, opacity: 0.38, depthWrite: false }));
+  sh.rotation.x = -Math.PI / 2; sh.scale.set(0.85, 0.5, 1); sh.position.set(0.02, 0.003, 0.02); scene.add(sh);
+  const sh2 = sh.clone(); sh2.scale.set(0.6, 0.34, 1); sh2.position.y = 0.004; scene.add(sh2);
+}
+const panels = [];
+function panel(rect, setup, cam, opts = {}) {
+  const scene = new THREE.Scene(); lights(scene, opts.light);
+  const [, , w, h] = rect;
+  const camera = new THREE.PerspectiveCamera(cam.fov, w / h, 0.1, 100);
+  const tgt = new THREE.Vector3(...cam.target), az = (cam.az || 0) * Math.PI / 180, el_ = cam.el * Math.PI / 180;
+  const d = cam.vis / (2 * Math.tan(cam.fov * Math.PI / 360));
+  camera.position.set(tgt.x + d * Math.cos(el_) * Math.sin(az), tgt.y + d * Math.sin(el_), tgt.z + d * Math.cos(el_) * Math.cos(az));
+  camera.lookAt(tgt); camera.updateMatrixWorld();
+  setup(scene);
+  panels.push({ rect, scene, camera, px: opts.px || 4, vis: cam.vis });
+}
+panel(R.idle, (s) => { const c = createCharacter(); setPose(c, 'idle'); setExpression(c, 'neutral'); s.add(c); ground(s); },
+  { fov: 16, target: [0, 1.25, 0], vis: 3.55, el: 7, az: 5 }, { px: 4.5 });
+panel(R.point, (s) => { const c = createCharacter(); setPose(c, 'point'); setExpression(c, 'happy'); s.add(c); ground(s); },
+  { fov: 16, target: [-0.1, 1.25, 0], vis: 3.55, el: 7, az: 0 }, { px: 4.5 });
+panel(R.happy, (s) => { const c = createCharacter(); setExpression(c, 'happy'); c.rotation.y = -0.25; s.add(c); },
+  { fov: 14, target: [0, 1.9, 0], vis: 1.78, el: 2, az: 0 }, { px: 4.5, light: { target: [0, 1.9, 0], box: 1.6 } });
+panel(R.scared, (s) => { const c = createCharacter(); setExpression(c, 'scared'); c.rotation.y = 0.22; s.add(c); },
+  { fov: 14, target: [0, 1.9, 0], vis: 1.78, el: 2, az: 0 }, { px: 4.5, light: { target: [0, 1.9, 0], box: 1.6 } });
+
+el('lab teal', 'happy', R.happy[0] + 18, R.happy[1] + R.happy[3] - 52);
+el('lab coral', 'scared', R.scared[0] + 18, R.scared[1] + R.scared[3] - 52);
+el('lab', 'idle', R.idle[0] + 18, R.idle[1] + R.idle[3] - 52);
+el('lab', 'point · “this one”', R.point[0] + 18, R.point[1] + R.point[3] - 52);
+el('', 'TOON CEL-SHADED', 0, 0).id = 'title';
+el('', 'Oli · 3-step ramp · inverted-hull ink · rim light · three.js', 0, 0).id = 'sub';
+for (const id of ['title', 'sub']) document.getElementById(id).removeAttribute('style');
+
+renderer.setScissorTest(true);
+for (const p of panels) {
+  const [x, y, w, h] = p.rect;
+  setOutline(p.px * p.vis / h);
+  renderer.setViewport(x, H - y - h, w, h); renderer.setScissor(x, H - y - h, w, h);
+  renderer.render(p.scene, p.camera);
+}
+window.__READY = true;
+</script></body></html>
