@@ -480,6 +480,72 @@
       "sourceType": "github",
       "skillPath": "skills/genres/visual-novel/SKILL.md",
       "computedHash": "dc8232f6048f8b69b207bd9f97714290c57c549112a12524cd94067991ea0807"
+    },
+    "yt-audit": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-audit/SKILL.md",
+      "computedHash": "c8627bbf32eb51c467473ffd29f57307891b74942eee72b21a0b8954f33c1e8a"
+    },
+    "yt-chapters": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-chapters/SKILL.md",
+      "computedHash": "06f1fae3421ebe9d8b47271ac7bebb7ee1aef4f7385966b7c6a2c8888c5544a1"
+    },
+    "yt-comment": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-comment/SKILL.md",
+      "computedHash": "01057ac8c25567a6f00e1ab520c1986c3c046e700cabe6547d4fe94b8beeff4a"
+    },
+    "yt-edit": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-edit/SKILL.md",
+      "computedHash": "be063a9812425d101f5f5b50273c1300314e0d44aee7d55ad1ec25b5bc416795"
+    },
+    "yt-package": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-package/SKILL.md",
+      "computedHash": "e8218b0026cf97d5e822d2a6f136b228a626773a3525c59cb8a4d000bd63c203"
+    },
+    "yt-plan": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-plan/SKILL.md",
+      "computedHash": "6dc05f102ccebbc99c36c33c9b632e1334e3b4639fae1cf2924cf2c09627d9e2"
+    },
+    "yt-retention": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-retention/SKILL.md",
+      "computedHash": "86753b8ad02e72c47d35cc0d67de767d8359aa21b1a64051f9751ad2548335f5"
+    },
+    "yt-script": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-script/SKILL.md",
+      "computedHash": "fb792e7daad19ba70bb3b7928557a632245ff03da4856544c30b8ca2813f3e14"
+    },
+    "yt-seo": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-seo/SKILL.md",
+      "computedHash": "1d1ccebaf0a4123268ad1710b87a73d4d3eb2f088da8088458e6b8c79776c54a"
+    },
+    "yt-shorts": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-shorts/SKILL.md",
+      "computedHash": "1044ba5d898339e80225b86d37a67bab4e8b810ea60f5b5263699c3e6b8bf035"
+    },
+    "yt-viral": {
+      "source": "Jakeschincariol/youtube-agent-skill",
+      "sourceType": "github",
+      "skillPath": "skills/yt-viral/SKILL.md",
+      "computedHash": "7029e8397452b783348ca179e99a566459dce3aa816fbf973ef088e0843d702a"
     }
   }
 }
