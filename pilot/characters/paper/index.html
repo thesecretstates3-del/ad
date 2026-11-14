@@ -1,0 +1,108 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli — paper cut-out sheet</title></head><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Graphics, Text } from 'pixi.js';
+import { createCharacter, setPose, setExpression, explode, pivotPoints, paperBackground, paperPiece, PAL, rrect, ell as ellp } from './character.js';
+
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: PAL.bg, preference: 'webgl', antialias: true });
+document.body.appendChild(app.canvas);
+const stage = app.stage;
+stage.addChild(paperBackground(1920, 1080));
+
+const FONT = 'Inter, Helvetica, Arial, sans-serif';
+const rect = (x, y, w, h, r = 4) => rrect(x, y, w, h, r);
+
+// paper label strip with ink text; (x,y) = top-left
+let labelId = 0;
+function label(text, x, y, size = 20, fill = '#FFF4DC', ink = PAL.ink, tilt = 0) {
+  const t = new Text({ text, style: { fontFamily: FONT, fontWeight: '800', fontSize: size, letterSpacing: size * 0.16, fill: ink } });
+  const w = Math.ceil(t.width + size * 1.5), h = Math.ceil(size * 1.75);
+  const c = paperPiece('label' + (labelId++), [{ polys: [rect(0, 0, w, h, 3)], fill, border: 3.5, jit: 0.9, step: 12, sh: 0.8 }], 2);
+  t.position.set(size * 0.75 + size * 0.08, (h - t.height) / 2);
+  c.addChild(t); c.position.set(x, y); c.rotation = tilt; stage.addChild(c); return c;
+}
+function tape(x, y, rot, w = 96, h = 30, color = PAL.teal) {
+  const c = paperPiece('tape' + (labelId++), [{ polys: [rect(-w / 2, -h / 2, w, h, 1)], fill: color, border: 0, jit: 1.4, step: 9, sh: 0.45, alpha: 0.78, gloss: 0.05 }], 2);
+  c.position.set(x, y); c.rotation = rot; stage.addChild(c); return c;
+}
+function card(key, x, y, w, h, fill, rot = 0) {
+  const c = paperPiece(key, [{ polys: [rect(0, 0, w, h, 6)], fill, border: 7, jit: 1.7, step: 20, sh: 1.2, gloss: 0.06 }], 2);
+  c.position.set(x, y); c.rotation = rot; stage.addChild(c); return c;
+}
+function fit(char, targetH) {
+  const g = char.parts.groundShadow; g.visible = false;
+  const b = char.getLocalBounds(); g.visible = true;
+  return targetH / b.height;
+}
+
+// ---- title
+label('PAPER CUT-OUT', 56, 40, 30, PAL.cream, PAL.ink, -0.012);
+tape(60, 46, -0.5, 70, 24); tape(318, 92, -0.4, 60, 22, PAL.stripe);
+
+// ---- paper discs behind the figures
+{
+  const disc = (key, cx, cy, rx, ry, col, rot) => { const c = paperPiece(key, [{ polys: [ellp(0, 0, rx, ry)], fill: col, border: 8, jit: 2.2, step: 26, sh: 1.3, gloss: 0.06, dots: { color: '#FFFFFF', alpha: 0.22, gap: 14, r: 2.6 } }], 2); c.position.set(cx, cy); c.rotation = rot; stage.addChild(c); };
+  disc('disc_idle', 322, 700, 205, 300, '#B9DED6', 0.03);
+  disc('disc_point', 782, 730, 205, 270, '#F6C8BC', -0.03);
+  const scrap = (key, polys, col, x, y, rot) => { const c = paperPiece(key, [{ polys, fill: col, border: 6, jit: 1.6, step: 18, sh: 1 }], 2); c.position.set(x, y); c.rotation = rot; stage.addChild(c); };
+  scrap('scrap_a', [ellp(0, 0, 52, 52)], PAL.teal, 600, 190, 0);
+  scrap('scrap_b', [[[-56, 40], [0, -52], [56, 40]]], PAL.stripe, 760, 300, 0.3);
+  scrap('scrap_c', [rect(-60, -34, 120, 68, 4)], PAL.hood, 470, 330, -0.25);
+  scrap('scrap_d', [ellp(0, 0, 30, 30)], '#26305A', 860, 150, 0);
+}
+// ---- idle (left)
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+const sIdle = fit(idle, 620);
+idle.scale.set(sIdle); idle.position.set(330, 985); stage.addChild(idle);
+label('IDLE', 330 - 36, 1018, 18, PAL.cream, PAL.ink);
+
+// ---- point (centre)
+const point = createCharacter(app, { pose: 'point', expression: 'happy' });
+const sPoint = fit(point, 560) ;
+point.scale.set(sPoint); point.position.set(790, 985); stage.addChild(point);
+label('POINT', 790 - 40, 1018, 18, PAL.cream, PAL.ink);
+
+// ---- expression cards (2x2)
+const exprs = [['neutral', '#D3E3D8'], ['happy', '#F9E0A2'], ['surprised', '#F6CBC0'], ['scared', '#CBD3EA']];
+const CW = 410, CH = 252, X0 = 1010, Y0 = 34;
+exprs.forEach(([name, col], i) => {
+  const cx = X0 + (i % 2) * (CW + 30), cy = Y0 + Math.floor(i / 2) * (CH + 30);
+  card('card_' + name, cx, cy, CW, CH, col, (i % 2 ? 0.006 : -0.006));
+  const holder = new Container(); holder.position.set(cx, cy); stage.addChild(holder);
+  const ch = createCharacter(app, { pose: 'idle', expression: name });
+  // portrait crop: head + collar + top of hoodie; remove ground shadow
+  ch.parts.groundShadow.visible = false;
+  const head = ch.parts.head; const hp = ch.toLocal(head.toGlobal({ x: 0, y: 0 }));
+  const hs = 0.66;
+  ch.scale.set(hs); ch.position.set(CW / 2 - hp.x * hs, 220 - hp.y * hs);
+  const m = new Graphics().rect(10, 10, CW - 20, CH - 20).fill(0xffffff);
+  holder.addChild(ch, m); ch.mask = m;
+  label(name.toUpperCase(), cx + 22, cy + 20, 17, PAL.cream, PAL.ink, -0.02);
+  if (i % 2) tape(cx + CW - 30, cy + 14, 0.7); else tape(cx + 26, cy + CH - 12, -0.6, 80, 26, PAL.stripe);
+});
+
+// ---- exploded rig (bottom right)
+const RX = X0, RY = 600, RW = 2 * CW + 30, RH = 446;
+card('card_rig', RX, RY, RW, RH, '#E9DABA', 0.003);
+const rig = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+explode(rig, 1.85, 0.7);
+rig.parts.groundShadow.visible = false;
+const sRig = Math.min(fit(rig, RH - 64), (RW - 60) / rig.getLocalBounds().width);
+rig.scale.set(sRig);
+stage.addChild(rig);
+const bb = rig.getLocalBounds();
+rig.position.set(RX + RW / 2 - (bb.x + bb.width / 2) * sRig, RY + 52 - bb.y * sRig);
+const dots = new Container(); stage.addChild(dots);
+for (const { name, pt } of pivotPoints(rig, dots)) {
+  if (['face', 'skull', 'nose', 'blushL', 'blushR'].includes(name)) continue;
+  const g = new Graphics().circle(0, 0, 4.6).fill(0xFFF4DC).circle(0, 0, 3).fill(PAL.stripe);
+  g.position.set(pt.x, pt.y); dots.addChild(g);
+}
+label('RIG  -  PIVOTS', RX + 22, RY + 18, 17, PAL.cream, PAL.ink, -0.01);
+tape(RX + RW - 40, RY + 14, 0.5);
+
+app.render();
+window.__char = { idle, point, rig, setPose, setExpression };
+window.__READY = true;
+</script></body></html>
