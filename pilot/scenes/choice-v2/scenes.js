@@ -50,14 +50,14 @@ function clear() {
 // =====================================================================================
 // HOOK  (cafe)
 // =====================================================================================
-const setLayer = (c, f, camX, z) => { c.pivot.set(960 + (camX - 960) * f, 560); c.position.set(960, 560); c.scale.set(z); };
-const O1X = 800, O2X = 2150, OY = 716 + 192 * 0.95;
+const setLayer = (c, f, camX, z) => { c.pivot.set(960 + (camX - 960) * f, 600); c.position.set(960, 600); c.scale.set(z); };
+const O1X = 800, O2X = 2150, OY = 786 + 192 * 1.1, TY = 70;
 
 function camAt(th) {
   const pan = inOutCubic(prog(th, 4.2, 4.6));
-  const z0 = lerp(1.0, 1.2, prog(th, 0, 4.2));
-  let z = lerp(z0, 1.1, pan) + 0.2 * sstep(4.6, 8.6, th);
-  const x = lerp(880, 2080, pan) + 10 * Math.sin(th * 0.7);
+  const z0 = lerp(1.0, 1.12, prog(th, 0, 4.2));
+  let z = lerp(z0, 1.0, pan) + 0.12 * sstep(4.6, 8.6, th);
+  const x = lerp(880, 2130, pan) + 10 * Math.sin(th * 0.7);
   const k = prog(th, TB, TB + 0.16), b = outBack(k, 2.2) * (1 - sstep(TB + 0.45, TB + 1.1, th)) * (th >= TB ? 1 : 0);
   return { x, zf: z * (1 + 0.3 * b), zb: (1 + (z - 1) * 0.55) * (1 - 0.14 * b), pan: Math.sin(Math.PI * prog(th, 4.2, 4.6)), bump: b };
 }
@@ -77,27 +77,27 @@ function cafeShot(sc, th, ta, live) {
   view.addChild(back, mid);
   const act = new Container(); view.addChild(act); setLayer(act, 1, cam.x, cam.zf);
   // table 1 + Oli 1 (looks at phone)
-  act.addChild(drawChair(O1X, 1));
+  { const c1 = drawChair(O1X, 1); c1.y = TY; act.addChild(c1); }
   const p1 = clone(PO.holdCup); p1.turn = 0.55; p1.hips.y += 8; p1.head.r = 0.16 - 0.2 * sstep(3.3, 3.9, th);
   const react = sstep(TD - 0.2, TD + 0.1, th) * (1 - sstep(TD + 0.9, TD + 1.5, th));
   p1.head.r += 0.05 * Math.sin(th * 1.3) - 0.06 * react;
   const ex1 = th > TD + 0.2 && th < TD + 1.3 ? 'surprised' : 'neutral';
-  placeOli(oli1, { x: O1X, y: OY, s: 0.95, pose: p1, expr: ex1, t: th, seed: 3, brow: -12 * react, browTilt: 0.12 * react, glance: th > 3.4 && th < 4.2 ? 1 : (th < 1.0 ? 0.5 : undefined) });
-  oli1.parts.handL.addChild(phone); phone.position.set(2, 26); phone.rotation = 0.35; phone.scale.set(1.15);
+  placeOli(oli1, { x: O1X, y: OY, s: 1.1, pose: p1, expr: ex1, t: th, seed: 3, brow: -12 * react, browTilt: 0.12 * react, glance: th > 3.4 && th < 4.2 ? 1 : (th < 1.0 ? 0.5 : undefined) });
   act.addChild(oli1.root);
-  act.addChild(drawTable(O1X + 60));
-  cupT.position.set(O1X + 230, 716 - 6); cupT.scale.set(0.8); cupT.rotation = 0; act.addChild(cupT); steam(cupT, th);
+  { const lp = act.toLocal(oli1.parts.handL.getGlobalPosition()); phone.position.set(lp.x, lp.y - 10); phone.rotation = 0.25; phone.scale.set(2.0); act.addChild(phone); }
+  { const tb = drawTable(O1X + 60); tb.y = TY; act.addChild(tb); }
+  cupT.position.set(O1X + 230, 716 + TY - 6); cupT.scale.set(1.0); cupT.rotation = 0; act.addChild(cupT); steam(cupT, th);
   // table 2 + Oli 2 (yesterday)
-  act.addChild(drawChair(O2X + 20, -1));
+  { const c2 = drawChair(O2X + 20, -1); c2.y = TY; act.addChild(c2); }
   const sipK = sstep(4.2, 4.4, th) * (1 - sstep(4.85, 5.05, th));
   const low = clone(PO.holdCup); low.turn = 0; low.head.r = 0; low.armL = { u: -0.3, l: -0.95, hand: 'open' };
   let p2 = blend(PO.holdCup, PO.sip, sipK); p2 = blend(p2, low, outCubic(prog(th, 5.0, 5.4)));
   const sur = th >= 5.4, bump = sur ? Math.max(0, 1 - (th - 5.4) * 8) : 0;
   p2.hips.y += 8;
-  placeOli(oli2, { x: O2X, y: OY, s: 0.97 * (1 + 0.06 * bump), pose: p2, expr: sur ? 'surprised' : 'neutral', t: th, seed: 11, glance: th > 5.1 ? 0 : undefined, brow: sur ? -8 : 0 });
+  placeOli(oli2, { x: O2X, y: OY, s: 1.12 * (1 + 0.06 * bump), pose: p2, expr: sur ? 'surprised' : 'neutral', t: th, seed: 11, glance: th > 5.1 ? 0 : undefined, brow: sur ? -8 : 0 });
   cupA.position.set(0, 36); cupA.rotation = -0.15; cupA.scale.set(0.9); oli2.parts.handL.addChild(cupA); steam(cupA, th);
   act.addChild(oli2.root);
-  act.addChild(drawTable(O2X - 20));
+  { const tb2 = drawTable(O2X - 20); tb2.y = TY; act.addChild(tb2); }
   // pan blur + streaks
   if (cam.pan > 0.05) { blurV.strengthX = cam.pan * 40; blurV.strengthY = 0; view.filters = [blurV]; } else view.filters = null;
   // overlays
@@ -227,10 +227,8 @@ function rewind(t) {
     lab.alpha = on ? 1 : 0.55;
     ov.addChild(T('sp', 'SP', 44, { x: 1840, y: 250, fill: '#FFFFFF', stroke: INK, sw: 6, italic: false }));
   }
-  // CRT shut-off
-  const cs = prog(t, 13.4, 13.8);
-  if (cs > 0) { box.scale.y = lerp(1, 0.012, inCubic(cs)); box.scale.x = 1 + 0.2 * cs * cs; if (cs > 0.9) ov.addChild(new Graphics().rect(0, 0, W, H).fill({ color: '#FFFFFF', alpha: 0.9 })); }
-  if (t >= 13.8) { const f = 1 - prog(t, 13.8, 14.0); sc.addChild(new Graphics().rect(0, 540 - 3, W * f, 6).fill('#FFFFFF')); }
+  // short VHS static burst (4 frames) instead of any black frame
+  if (t >= 13.3 && t < 13.43) { const g = new Graphics(), fr2 = Math.floor(t * 30); for (let i = 0; i < 260; i++) g.rect(hash(fr2 * 3 + i) * W, hash(fr2 * 7 + i * 5) * H, 60 + hash(i + fr2) * 500, 3 + hash(i * 3 + fr2) * 14); g.fill({ color: '#FFFFFF', alpha: 0.7 }); ov.addChild(g); ov.addChild(new Graphics().rect(0, 0, W, H).fill({ color: '#8FA0FF', alpha: 0.25 })); }
   return { c: sc };
 }
 
@@ -276,7 +274,7 @@ function badge(parent, key, x, y, col, sc, ch = key) {
   c.addChild(T('badge' + key, ch, 120, { fill: '#FFFFFF', stroke: INK, sw: 10, y: 4, ls: 0 }));
 }
 function choiceOli(t, ta, expand) {
-  const o = { x: 975, y: 1050, s: 0.7, expr: 'neutral', t, seed: 7 };
+  const o = { x: 975, y: 1050, s: 0.74, expr: 'neutral', t, seed: 7 };
   const p = clone(PO.idle);
   let pose = p;
   const g = (a, b) => sstep(a, a + 0.18, t) * (1 - sstep(b, b + 0.18, t)); // glance window
@@ -295,11 +293,11 @@ function choiceOli(t, ta, expand) {
     if (t >= 23.85) { pose = blend(pose, PO.look, outCubic(prog(t, 23.85, 24.3))); o.expr = 'neutral'; }
   }
   // expanded + walk into the booth
-  o.x = lerp(975, 570, expand); o.y = lerp(1050, 1030, expand); o.s = lerp(0.7, 0.66, expand);
+  o.x = lerp(975, 570, expand); o.y = lerp(1050, 1030, expand); o.s = lerp(0.74, 0.72, expand);
   let inside = false;
   if (t >= 24.7) {
     const k = prog(t, 24.7, 25.4), e = k * k * (3 - 2 * k) * 0.3 + k * 0.7;
-    o.x = lerp(570, 1195, e); o.s = lerp(0.66, 0.54, k); o.y = lerp(1030, 1010, k);
+    o.x = lerp(570, 1195, e); o.s = lerp(0.72, 0.6, k); o.y = lerp(1030, 1010, k);
     pose = walkPose((t - 24.7) * 7.2); o.expr = 'happy'; o.glance = 1; o.talk = undefined;
     inside = e > 0.86;
   }
@@ -313,8 +311,8 @@ function choice(t) {
   const greyK = prog(t, 22.75, 23.3), dis = prog(t, 23.1, 23.95);
   const orb = 38 * Math.sin((t - 16.4) * 0.75) * (1 - expand);
   const camC = new Container(); sc.addChild(camC);
-  const zoom = 1 + 2.4 * inCubic(prog(t, 24.95, 25.85)), bx = lerp(1560, 1200, expand), by = lerp(1000, 1030, expand), bs = lerp(1.2, 1.3, expand);
-  camC.pivot.set(1200, 1030 - 250 * 1.3); camC.position.set(1200, 1030 - 250 * 1.3); camC.scale.set(zoom);
+  const zoom = 1 + 2.4 * inCubic(prog(t, 24.95, 25.85)), bx = lerp(1560, 1200, expand), by = lerp(1045, 1030, expand), bs = lerp(1.32, 1.45, expand);
+  camC.pivot.set(1200, 1030 - 250 * 1.45); camC.position.set(1200, 1030 - 250 * 1.45); camC.scale.set(zoom);
   camC.addChild(cached('choiceBgPaper', () => new Graphics().rect(-400, -400, W + 800, H + 800).fill('#FFF4DC')));
   const gut = new Graphics(), ga = 1 - sstep(24.2, 24.6, t);
   if (ga > 0.01) { gut.poly([1018, 0, 1062, 0, 942, 1080, 898, 1080]).fill(INK); gut.poly([1032, 0, 1048, 0, 928, 1080, 912, 1080]).fill('#FFFFFF'); gut.alpha = ga; camC.addChild(gut); }
@@ -389,7 +387,7 @@ function choice(t) {
   // warp / zoom-through into the booth + end card
   const wp = prog(t, 25.2, 25.85);
   if (wp > 0 && t < 26.1) {
-    speedLines(ov, t, 1200, 1030 - 250 * 1.3, { alpha: 0.9 * wp, r0: lerp(500, 120, wp), r1: 1800, n: 44, color: '#FFFFFF' });
+    speedLines(ov, t, 1200, 1030 - 250 * 1.45, { alpha: 0.9 * wp, r0: lerp(500, 120, wp), r1: 1800, n: 44, color: '#FFFFFF' });
     ov.addChild(new Graphics().rect(-100, -100, W + 200, H + 200).fill({ color: '#FFFFFF', alpha: Math.max(0, wp - 0.45) * 1.8 * (1 - prog(t, 25.9, 26.15)) }));
   }
   if (t >= 25.85) endCard(ov, t);
@@ -399,17 +397,21 @@ function endCard(ov, t) {
   const u = t - 25.85, f = 1 - prog(u, 0, 0.3);
   const c = new Container(); ov.addChild(c);
   c.addChild(cached('endBg', () => new Graphics().rect(-100, -100, W + 200, H + 200).fill('#FFF4DC')));
-  const r = new Graphics(); rays(r, 960, 440, 2200, 24, '#BFF0EA', 0.4, u * 0.3, 77); c.addChild(r);
-  const d = new Graphics(); dots(d, 0, 0, W, H, 18, (x, y) => Math.max(0, 3.6 - (H - y) / 120), TEAL); c.addChild(d);
-  const p1 = Math.max(0.001, pop(u, 0.1, 0.35, 2.4)), p2 = Math.max(0.001, pop(u, 0.28, 0.3, 2.4));
-  const b = new Container(); b.position.set(960, 380); b.scale.set(p1); c.addChild(b);
+  const r = new Graphics(); rays(r, 960, 430, 2400, 22, '#7FDDD2', 0.4, u * 0.3, 77); c.addChild(r);
+  const d = new Graphics(); dots(d, 0, 0, W, H, 18, (x, y) => Math.max(0, 4.2 - (H - y) / 110), CORAL); c.addChild(d);
+  const p1 = Math.max(0.001, pop(u, 0, 0.3, 2.4)), p2 = Math.max(0.001, pop(u, 0.06, 0.25, 2.6)), p3 = Math.max(0.001, pop(u, 0.14, 0.25, 3.0));
+  const b = new Container(); b.position.set(960, 380); b.scale.set(p1 * (1 + 0.02 * Math.sin(u * 6))); c.addChild(b);
+  burst(b, 0, 0, 560, { fill: YEL, n: 14, seed: 21, jit: 0.3, dot: '#F2B33D' });
   const g = new Graphics();
-  g.circle(10, 12, 200).fill(INK); g.circle(0, 0, 200).fill(TEAL).stroke({ width: 12, color: INK }); g.circle(0, 0, 170).stroke({ width: 5, color: '#FFFFFF', alpha: 0.7 });
-  const fork = (w, col) => { g.moveTo(0, 120).lineTo(0, 10).moveTo(0, 10).lineTo(-80, -55).moveTo(0, 10).lineTo(80, -55).moveTo(-80, -55).lineTo(-80, -95).moveTo(80, -55).lineTo(80, -95).stroke({ width: w, color: col, cap: 'round', join: 'round' }); };
-  fork(46, INK); fork(26, '#FFFFFF');
-  for (const sx of [-80, 80]) { g.poly([sx - 38, -92, sx + 38, -92, sx, -150]).fill(INK); g.poly([sx - 24, -96, sx + 24, -96, sx, -132]).fill('#FFFFFF'); }
+  g.circle(12, 14, 270).fill(INK); g.circle(0, 0, 270).fill(TEAL).stroke({ width: 14, color: INK }); g.circle(0, 0, 232).stroke({ width: 6, color: '#FFFFFF', alpha: 0.7 });
+  const fork = (w, col) => { g.moveTo(0, 170).lineTo(0, 20).moveTo(0, 20).lineTo(-110, -70).moveTo(0, 20).lineTo(110, -70).moveTo(-110, -70).lineTo(-110, -125).moveTo(110, -70).lineTo(110, -125).stroke({ width: w, color: col, cap: 'round', join: 'round' }); };
+  fork(66, INK); fork(40, '#FFFFFF');
+  for (const sx of [-110, 110]) { g.poly([sx - 55, -122, sx + 55, -122, sx, -205]).fill(INK); g.poly([sx - 36, -128, sx + 36, -128, sx, -180]).fill('#FFFFFF'); }
   b.addChild(g);
-  const cap = caption(c, 'endcap', 'SEÇİM: B', 960, 740, { size: 150, bg: CORAL, fill: '#FFFFFF', stroke: INK, sw: 14, pop: p2, rot: -0.02, italic: true });
+  caption(c, 'endcap', 'SEÇİM:', 700, 835, { size: 170, bg: '#FFFFFF', fill: INK, stroke: '#FFFFFF', sw: 2, pop: p2, rot: -0.03, italic: true });
+  const bb = new Container(); bb.position.set(1290, 830); bb.scale.set(p3); c.addChild(bb);
+  bb.addChild(new Graphics().circle(10, 12, 150).fill(INK)); bb.addChild(new Graphics().circle(0, 0, 150).fill(CORAL).stroke({ width: 12, color: INK }));
+  bb.addChild(T('endB', 'B', 220, { fill: '#FFFFFF', stroke: INK, sw: 16, y: 8, ls: 0 }));
   c.addChild(new Graphics().rect(-100, -100, W + 200, H + 200).fill({ color: '#FFFFFF', alpha: 0.7 * f }));
 }
 
@@ -419,12 +421,12 @@ function endCard(ov, t) {
 function subtitles(t) {
   const ov = new Container(); capLayer.addChild(ov);
   for (const L of VOICE) {
-    if (t < L.start - 0.02 || t > L.start + L.dur + 0.5) continue;
+    if (t < L.start - 0.02 || t > L.start + L.dur + 0.3 || VOICE.some((M) => M.start > L.start && M.start <= t)) continue;
     const wt = wordTimes(L), size = 56, gap = 18, maxW = 1560, keys = KEY[L.id] || {};
     const items = wt.map((x, i) => { const kc = keys[norm(x.w)]; const tx = T(`sw_${L.id}_${i}`, x.w, size, { fill: kc || '#FFFFFF', stroke: INK, sw: 13, ls: 1 }); return { tx, w: tx.width, t: x.t, key: !!kc }; });
     const rows = [[]]; let rw = 0;
     for (const it of items) { if (rw + it.w > maxW && rows[rows.length - 1].length) { rows.push([]); rw = 0; } rows[rows.length - 1].push(it); rw += it.w + gap; }
-    const out = 1 - prog(t, L.start + L.dur + 0.15, L.start + L.dur + 0.5), base = 1010 - (rows.length - 1) * 66;
+    const out = 1 - prog(t, L.start + L.dur, L.start + L.dur + 0.25), base = 1010 - (rows.length - 1) * 66;
     rows.forEach((row, ri) => {
       const tw = row.reduce((a, it) => a + it.w + gap, -gap); let x = 960 - tw / 2;
       for (const it of row) {
