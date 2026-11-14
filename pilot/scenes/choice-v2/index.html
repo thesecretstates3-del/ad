@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Seçim v2</title></head>
+<body style="margin:0;background:#1E1B24">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application } from 'pixi.js';
+import * as S from './scenes.js';
+const voice = await (await fetch('audio/voice.json')).json();
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: '#FFF4DC', preference: 'webgl', antialias: true, resolution: 1, autoStart: false });
+app.ticker.stop();
+document.body.appendChild(app.canvas);
+window.DURATION = 26.6;
+try { S.init(app, voice); } catch (e) { console.error("STACK " + e.stack); }
+window.renderAt = (t) => { try { S.render(t); } catch (e) { console.error("STACK " + e.stack); } };
+window.renderAt(0);
+window.__READY = true;
+</script></body></html>
