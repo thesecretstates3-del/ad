@@ -51,7 +51,7 @@ function clear() {
 // HOOK  (cafe)
 // =====================================================================================
 const setLayer = (c, f, camX, z) => { c.pivot.set(960 + (camX - 960) * f, 560); c.position.set(960, 560); c.scale.set(z); };
-const O1X = 800, O2X = 2150, OY = 858;
+const O1X = 800, O2X = 2150, OY = 716 + 192 * 0.95;
 
 function camAt(th) {
   const pan = inOutCubic(prog(th, 4.2, 4.6));
@@ -78,11 +78,11 @@ function cafeShot(sc, th, ta, live) {
   const act = new Container(); view.addChild(act); setLayer(act, 1, cam.x, cam.zf);
   // table 1 + Oli 1 (looks at phone)
   act.addChild(drawChair(O1X, 1));
-  const p1 = clone(PO.holdCup); p1.turn = 0.55; p1.hips.y += 20; p1.head.r = 0.16 - 0.2 * sstep(3.3, 3.9, th);
+  const p1 = clone(PO.holdCup); p1.turn = 0.55; p1.hips.y += 8; p1.head.r = 0.16 - 0.2 * sstep(3.3, 3.9, th);
   const react = sstep(TD - 0.2, TD + 0.1, th) * (1 - sstep(TD + 0.9, TD + 1.5, th));
   p1.head.r += 0.05 * Math.sin(th * 1.3) - 0.06 * react;
   const ex1 = th > TD + 0.2 && th < TD + 1.3 ? 'surprised' : 'neutral';
-  placeOli(oli1, { x: O1X, y: OY, s: 0.72, pose: p1, expr: ex1, t: th, seed: 3, brow: -12 * react, browTilt: 0.12 * react, glance: th > 3.4 && th < 4.2 ? 1 : (th < 1.0 ? 0.5 : undefined) });
+  placeOli(oli1, { x: O1X, y: OY, s: 0.95, pose: p1, expr: ex1, t: th, seed: 3, brow: -12 * react, browTilt: 0.12 * react, glance: th > 3.4 && th < 4.2 ? 1 : (th < 1.0 ? 0.5 : undefined) });
   oli1.parts.handL.addChild(phone); phone.position.set(2, 26); phone.rotation = 0.35; phone.scale.set(1.15);
   act.addChild(oli1.root);
   act.addChild(drawTable(O1X + 60));
@@ -93,8 +93,8 @@ function cafeShot(sc, th, ta, live) {
   const low = clone(PO.holdCup); low.turn = 0; low.head.r = 0; low.armL = { u: -0.3, l: -0.95, hand: 'open' };
   let p2 = blend(PO.holdCup, PO.sip, sipK); p2 = blend(p2, low, outCubic(prog(th, 5.0, 5.4)));
   const sur = th >= 5.4, bump = sur ? Math.max(0, 1 - (th - 5.4) * 8) : 0;
-  p2.hips.y += 20;
-  placeOli(oli2, { x: O2X, y: OY, s: 0.74 * (1 + 0.06 * bump), pose: p2, expr: sur ? 'surprised' : 'neutral', t: th, seed: 11, glance: th > 5.1 ? 0 : undefined, brow: sur ? -8 : 0 });
+  p2.hips.y += 8;
+  placeOli(oli2, { x: O2X, y: OY, s: 0.97 * (1 + 0.06 * bump), pose: p2, expr: sur ? 'surprised' : 'neutral', t: th, seed: 11, glance: th > 5.1 ? 0 : undefined, brow: sur ? -8 : 0 });
   cupA.position.set(0, 36); cupA.rotation = -0.15; cupA.scale.set(0.9); oli2.parts.handL.addChild(cupA); steam(cupA, th);
   act.addChild(oli2.root);
   act.addChild(drawTable(O2X - 20));
@@ -176,7 +176,7 @@ function splits(sc, th, ta, live) {
     const lp = who === 1 ? talkOf(th) : {};
     const pose = clone(who === 1 ? PO.look : PO.idle); pose.turn = who === 1 ? 0.3 : 0; if (scared) pose.head.r = (who === 1 ? 0.1 : -0.1);
     const s = 2.05 * (1 + 0.05 * sk);
-    placeOli(o, { x: cx, y: 520 + 610 * s, s, pose, expr: scared ? 'scared' : 'surprised', t: th, seed: who * 5, shadow: false, brow: 0, ...(live ? lp : {}), blink: 1 });
+    placeOli(o, { x: cx, y: 200 + 610 * s, s, pose, expr: scared ? 'scared' : 'surprised', t: th, seed: who * 5, shadow: false, brow: 0, ...(live ? lp : {}), blink: 1 });
     inner.addChild(o.root);
     if (th > 8.55 && th < 8.7) inner.addChild(new Graphics().rect(0, 0, W, H).fill({ color: '#FFFFFF', alpha: 0.6 * (1 - prog(th, 8.55, 8.7)) }));
   };
@@ -220,12 +220,12 @@ function rewind(t) {
     dsh.fill({ color: '#FFFFFF', alpha: 0.55 }); ov.addChild(dsh);
     // timecode bar + label
     const rewinding = t < 13.0;
-    ov.addChild(new Graphics().roundRect(60, 880, 560, 96, 16).fill({ color: '#000000', alpha: 0.7 }));
-    ov.addChild(T('tcode', '◀◀ ' + tcStr(th), 66, { x: 340, y: 928, fill: '#FFFFFF', ls: 2, italic: false }));
+    ov.addChild(new Graphics().roundRect(1260, 120, 560, 96, 16).fill({ color: '#000000', alpha: 0.7 }));
+    ov.addChild(T('tcode', '◀◀ ' + tcStr(th), 66, { x: 1540, y: 168, fill: '#FFFFFF', ls: 2, italic: false }));
     const on = Math.floor(t * 4) % 2 === 0 || t > 13.0;
     const lab = caption(ov, 'rwlab', rewinding ? '◀◀ GERİ SAR' : '▶ OYNAT', 330, 90, { size: 76, bg: rewinding ? CORAL : TEAL, fill: '#FFFFFF', stroke: INK, sw: 9, rot: -0.03, italic: true });
     lab.alpha = on ? 1 : 0.55;
-    ov.addChild(T('sp', 'SP', 44, { x: 1840, y: 70, fill: '#FFFFFF', stroke: INK, sw: 6, italic: false }));
+    ov.addChild(T('sp', 'SP', 44, { x: 1840, y: 250, fill: '#FFFFFF', stroke: INK, sw: 6, italic: false }));
   }
   // CRT shut-off
   const cs = prog(t, 13.4, 13.8);
@@ -257,10 +257,10 @@ function title(t) {
   burst(bc, 0, 0, 450, { fill: YEL, n: 13, seed: 12, jit: 0.3, dot: '#F2B33D' });
   bc.addChild(T('title', 'YA ... \nOLSAYDI?', 124, { fill: CORAL, stroke: INK, sw: 14, rot: -0.07, ls: 2 }));
   const chip = (key, s2, y, bg, t0, rot) => caption(ov, key, s2, 960, y, { size: 64, bg, fill: '#FFFFFF', stroke: INK, sw: 9, pop: pop(u, t0, 0.28, 2.4), rot, italic: true });
-  chip('chipA', '1.000.000 $ ...', 690, TEAL, 1.0, -0.025);
-  const orp = pop(u, 1.28, 0.25, 2.8), oc = new Container(); oc.position.set(960, 790); oc.scale.set(orp); oc.visible = orp > 0.001; ov.addChild(oc);
-  oc.addChild(new Graphics().circle(6, 8, 40).fill(INK)); oc.addChild(new Graphics().circle(0, 0, 40).fill('#FFFFFF').stroke({ width: 6, color: INK })); oc.addChild(T('or', 'YA DA', 28, {}));
-  chip('chipB', '24 SAAT GERİ?', 880, CORAL, 1.5, 0.02);
+  chip('chipA', '1.000.000 $ ...', 640, TEAL, 1.0, -0.025);
+  const orp = pop(u, 1.28, 0.25, 2.8), oc = new Container(); oc.position.set(960, 735); oc.scale.set(orp); oc.visible = orp > 0.001; ov.addChild(oc);
+  oc.addChild(new Graphics().circle(6, 8, 40).fill(INK)); oc.addChild(new Graphics().circle(0, 0, 40).fill('#FFFFFF').stroke({ width: 6, color: INK })); oc.addChild(T('or', 'YA DA', 30, {}));
+  chip('chipB', '24 SAAT GERİ?', 830, CORAL, 1.5, 0.02);
   return { c: sc };
 }
 
