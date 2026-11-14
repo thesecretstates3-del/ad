@@ -1,0 +1,101 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli - Pixel Art</title></head>
+<body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Sprite, Texture, Graphics, Text } from 'pixi.js';
+import { createCharacter, setPose, setExpression, explode } from './character.js';
+
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: '#F4EAD5', preference: 'webgl', antialias: false, roundPixels: true, resolution: 1 });
+document.body.appendChild(app.canvas);
+try { await document.fonts.ready; } catch (e) {}
+
+// ------------------------------------------------ backdrop: 320x180 logical pixels shown at x6
+const hash = (x, y) => { let h = (x * 374761393 + y * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return (h ^ (h >>> 16)) >>> 0; };
+const bgc = document.createElement('canvas'); bgc.width = 320; bgc.height = 180;
+const cx = bgc.getContext('2d');
+const px = (x, y, c) => { cx.fillStyle = c; cx.fillRect(x, y, 1, 1); };
+const FLOOR_Y = 148;
+for (let y = 0; y < 180; y++) for (let x = 0; x < 320; x++) {
+  let c = '#F4EAD5';
+  if (y < FLOOR_Y) {
+    const h = hash(x, y);
+    if (h % 29 === 0) c = '#EFE2C6'; else if (h % 67 === 0) c = '#F9F1DF';
+    if (y >= 118) c = (h % 29 === 0) ? '#E9DBBC' : '#F0E4CA';          // wainscot
+    if (y === 118) c = '#E3D3AE'; if (y === 119) c = '#F8F0DD';
+    if (y === FLOOR_Y - 2 || y === FLOOR_Y - 1) c = '#DCCBA3';          // baseboard
+  } else {
+    const tx = Math.floor(x / 10), ty = Math.floor((y - FLOOR_Y) / 5);
+    c = (tx + ty) % 2 === 0 ? '#EBDCBB' : '#F1E5C9';
+    if ((y - FLOOR_Y) % 5 === 0 && (tx + ty) % 2 === 1) c = '#EBDCBB';
+  }
+  px(x, y, c);
+}
+// soft window hint on the wall
+const win = (x0, y0, x1, y1) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const edge = x === x0 || x === x1 || y === y0 || y === y1; px(x, y, edge ? '#D9C7A0' : (hash(x, y) % 9 === 0 ? '#FFF8E8' : '#FBF4E2')); } };
+win(150, 20, 186, 70); for (let y = 21; y <= 69; y++) px(168, y, '#D9C7A0'); for (let x = 151; x <= 185; x++) px(x, 45, '#D9C7A0');
+// character shadows
+const shadow = (cxl, cyl, rx, ry) => { for (let y = -ry; y <= ry; y++) for (let x = -rx; x <= rx; x++) if ((x * x) / (rx * rx) + (y * y) / (ry * ry) <= 1) px(cxl + x, cyl + y, (hash(x, y) % 3 === 0) ? '#DCCBA3' : '#D3C095'); };
+shadow(55, 160, 22, 3); shadow(130, 160, 24, 3);
+// pixel panels
+function panel(x0, y0, x1, y1) {
+  for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+    const i = Math.min(x - x0, x1 - x), j = Math.min(y - y0, y1 - y);
+    if (i + j < 2 && i < 2 && j < 2) continue;                                   // notched corner
+    const border = i === 0 || j === 0 || (i < 2 && j < 2 && i + j === 2);
+    px(x, y, border ? '#C9B387' : (y === y1 - 1 || x === x1 - 1) ? '#F2E8CF' : '#FBF6E8');
+  }
+}
+panel(195, 4, 315, 94); panel(195, 99, 315, 175);
+const bg = new Sprite(Texture.from(bgc)); bg.texture.source.scaleMode = 'nearest'; bg.scale.set(6);
+app.stage.addChild(bg);
+
+const art = new Container(); app.stage.addChild(art);
+const ui = new Container(); app.stage.addChild(ui);
+
+// ------------------------------------------------ idle + point (x6, grid aligned)
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+idle.scale.set(6); idle.position.set(330, 960); art.addChild(idle);
+const point = createCharacter(app, { pose: 'point', expression: 'happy' });
+point.scale.set(6); point.position.set(780, 960); art.addChild(point);
+
+// ------------------------------------------------ 2x2 expression heads (x4)
+const names = ['neutral', 'happy', 'surprised', 'scared'];
+const cells = [[1350, 248], [1710, 248], [1350, 521], [1710, 521]];
+names.forEach((n, i) => {
+  const c = createCharacter(app, { pose: 'idle', expression: n });
+  const head = c.parts.head; head.removeFromParent();
+  const holder = new Container(); holder.scale.set(4); holder.position.set(cells[i][0], cells[i][1]);
+  head.position.set(0, 0); holder.addChild(head); art.addChild(holder);
+  const t = label(n, 26, 0x1E1B24, 2); t.anchor.set(0.5, 0); t.position.set(cells[i][0], cells[i][1] + 14); ui.addChild(t);
+});
+
+// ------------------------------------------------ exploded rig (x3) with pivot dots
+const rig = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+explode(rig, 1);
+rig.scale.set(3); rig.position.set(1530, 1022); art.addChild(rig);
+const DOTS = ['hips', 'torso', 'head', 'hair_curl', 'collar', 'armL_upper', 'armL_lower', 'handL', 'armR_upper', 'armR_lower', 'handR',
+  'legL_upper', 'legL_lower', 'footL', 'legR_upper', 'legR_lower', 'footR', 'eyeL', 'eyeR', 'browL', 'browR', 'mouth', 'pocket', 'pin'];
+const dots = new Graphics();
+for (const n of DOTS) {
+  const p = rig.parts[n].getGlobalPosition(); const x = Math.round(p.x), y = Math.round(p.y);
+  dots.circle(x, y, 6).fill(0xFF5D5D).stroke({ width: 2, color: 0x1E1B24 });
+  dots.circle(x, y, 1.5).fill(0xFFF4DC);
+}
+ui.addChild(dots);
+
+// ------------------------------------------------ labels
+function label(str, size, fill, ls = 0, weight = 'bold') {
+  return new Text({ text: str, style: { fontFamily: 'DejaVu Sans, Verdana, sans-serif', fontSize: size, fill, fontWeight: weight, letterSpacing: ls } });
+}
+const title = label('PIXEL ART', 54, 0x1E1B24, 10); title.position.set(48, 30); ui.addChild(title);
+const sub = label('OLI  /  CHARACTER STYLE SHEET  /  32-BIT PIXEL, 64x96 LOGICAL, x6', 18, 0x7A6748, 3, 'normal'); sub.position.set(52, 100); ui.addChild(sub);
+const bar = new Graphics().rect(48, 128, 120, 6).fill(0x2EC4B6).rect(168, 128, 48, 6).fill(0xFF5D5D); ui.addChild(bar);
+const l1 = label('IDLE', 26, 0x6B5B45, 6); l1.anchor.set(0.5, 0); l1.position.set(330, 1010); ui.addChild(l1);
+const l2 = label('POINT  -  "I CHOOSE THIS ONE"', 26, 0x6B5B45, 4); l2.anchor.set(0.5, 0); l2.position.set(780, 1010); ui.addChild(l2);
+const l3 = label('EXPRESSIONS', 20, 0x7A6748, 5); l3.position.set(1200, 40); ui.addChild(l3);
+const l4 = label('RIG  -  PARTS + PIVOTS', 20, 0x7A6748, 5); l4.position.set(1200, 612); ui.addChild(l4);
+
+app.render();
+window.__READY = true;
+</script></body></html>
