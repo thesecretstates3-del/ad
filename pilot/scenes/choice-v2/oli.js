@@ -31,7 +31,7 @@ export function walkPose(ph, bob = 1) {
   return p;
 }
 export function blend(a, b, k) {
-  if (k <= 0) return a; if (k >= 1) return b;
+  if (k <= 0) return JSON.parse(JSON.stringify(a)); if (k >= 1) return JSON.parse(JSON.stringify(b));
   const out = {};
   for (const key in a) {
     const va = a[key], vb = b[key];
