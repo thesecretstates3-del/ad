@@ -74,8 +74,8 @@ exprs.forEach(([name, col], i) => {
   // portrait crop: head + collar + top of hoodie; remove ground shadow
   ch.parts.groundShadow.visible = false;
   const head = ch.parts.head; const hp = ch.toLocal(head.toGlobal({ x: 0, y: 0 }));
-  const hs = 0.66;
-  ch.scale.set(hs); ch.position.set(CW / 2 - hp.x * hs, 220 - hp.y * hs);
+  const hs = 0.6;
+  ch.scale.set(hs); ch.position.set(CW / 2 - hp.x * hs, 222 - hp.y * hs);
   const m = new Graphics().rect(10, 10, CW - 20, CH - 20).fill(0xffffff);
   holder.addChild(ch, m); ch.mask = m;
   label(name.toUpperCase(), cx + 22, cy + 20, 17, PAL.cream, PAL.ink, -0.02);
