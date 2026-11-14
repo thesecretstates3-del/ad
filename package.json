@@ -22,8 +22,10 @@
   "dependencies": {
     "d3-geo": "^3.1.1",
     "flubber": "^0.4.2",
+    "pixi.js": "^8.23.0",
     "polygon-clipping": "^0.15.7",
     "polylabel": "^1.1.0",
+    "three": "^0.187.0",
     "topojson-client": "^3.1.0",
     "world-atlas": "^2.0.2"
   },

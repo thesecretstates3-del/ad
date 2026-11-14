@@ -1,0 +1,11 @@
+<!doctype html><html><body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs","three":"/node_modules/three/build/three.module.js"}}</script>
+<script type="module">
+import { Application, Graphics } from 'pixi.js';
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: '#f4ead5', preference: 'webgl', antialias: true });
+document.body.appendChild(app.canvas);
+app.stage.addChild(new Graphics().circle(960, 540, 200).fill('#ff5d5d'));
+app.render();
+window.__READY = true;
+</script></body></html>
