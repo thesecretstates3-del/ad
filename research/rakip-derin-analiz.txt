@@ -1,0 +1,112 @@
+ConChaser: En Çok İzlenen İki Videonun Derin Analizi
+
+Kaynaklar:
+Tam Türkçe çeviriler: rakip-video-1-servet-tr.md, rakip-video-2-iq-tr.md
+Orijinal İngilizce transkriptler (NexLev, 14 Kasım 2026)
+Yeni kurulan yt-viral/swipe.py, yt-script/hookscore.py ve yt-package/title.py araçlarının gerçek çıktıları
+
+Aşağıdaki zaman damgaları transkriptten alınmıştır; tahmin değildir.
+
+1. Veri: hangi videolar neden öne çıkıyor (swipe.py)
+Kanal medyanı 112.000 izlenme. Her videonun bu medyana göre katı:
+
+Kat — İzlenme — Video
+16,96x — 1,9 milyon — Future Wealth (servet)
+16,07x — 1,8 milyon — IQ
+8,93x — 1,0 milyon — Future Height (boy)
+6,19x — 693 bin — Who Finds You Attractive
+6,00x — 672 bin — How Many People Have a Crush on You
+0,2–0,6x — 10–69 bin — Antichrist, GTA 6, Search History, Hear Your Thoughts, Bank Balance
+
+Ortak nokta: En iyi beş videonun hepsi, insanların içinde saklı olan ve seni onlarla kıyaslatan bir sayıyı görmekle ilgili: servet, zekâ, boy, çekicilik, hayranlık. İzleyicinin ilk sorusu her zaman "benimki kaç?" oluyor.
+
+Batan videolar: Ya soyut (Antichrist), ya bir ürüne bağlı (GTA 6), ya da kıyas içermeyen bir konu (arama geçmişi, düşünceleri duymak). Banka bakiyesi ise servetin zayıf bir tekrarı.
+
+Bize dersi: A/B seçenekleri izleyiciyi kendisiyle kıyaslatmalı. "Sen olsan?" sorusu doğal olarak ortaya çıkmalı.
+
+2. Video 1: "Herkesin Gelecekteki Servetini Görebilseydin?" (10:48, ikinci tekil şahıs)
+
+Bölüm haritası
+Zaman — Bölüm — Ne oluyor — Teknik
+0:00–0:14 — Soğuk açılış — "Sir, you dropped this." Evsiz adama 5 dolar uzatıyorsun, başında 8.742.619.300 $ yazıyor. — Diyalogla, sahnenin ortasından başlamak. Ironi: milyardere 5 dolar vermek.
+0:14–0:38 — Kıyas — Ayakkabı, karton, yarım sandviç; sonra kendi sayın: 43.217 $. "Richer than you by approximately $8 billion." — Görünüş ile sayı çelişkisi + kendini kıyaslama + kuru espri
+0:38–0:47 — Vaat ve korku — "No idea what these numbers mean… by the end of the week you're going to wish you never found out." — İki açık döngü: "sayılar ne demek?" ve "neden pişman olacağım?"
+0:47–1:20 — Sabah — Anne 286.400 $, baba 91.200 $, köpek: sayı yok ("no financial future. Fair enough."). Google: "need more sleep". — Güvenli ortamda gücü tanıtmak. Her 5–10 saniyede bir sayı.
+1:21–1:38 — Sokak montajı — Postacı, koşucu 1,4 milyon $, park sayacına bağıran adam 27 $ — Hızlı sayı patlaması. Son öğe espri.
+1:38–2:05 — Kural 1 — Lamborghinili komşu 0 $, gazete dağıtan genç 16 milyon $ → sayılar gelecekteki en yüksek servet. — Kural, bir çelişki gözlemlenerek keşfediliyor. Anlatıcı açıklamıyor, izleyici kendisi çıkarıyor.
+2:05–3:10 — Açgözlü plan 1 — Hademe 3,2 milyon $ ile soru-cevap komedisi; 7 yaşında kız 92 milyon $ ("She likes purple.") — Plan → komik başarısızlık
+3:12–4:25 — Açgözlü plan 2 — Üniversiteli 64,8 milyar $; ortak oluyorsun, her sabah sayısını kontrol ediyorsun. — Plan çalışıyor gibi; gerilim kuruluyor
+4:27–5:30 — Orta nokta, Kural 2 — Yatırımcı teklifi, "reddet" diyorsun → sayı 4,2 milyon $'a düşüyor. Sayılar tahmin; eylemlerin onları değiştiriyor. "You may have just destroyed it." — Ödülü elinden almak; kuralın yeniden yazılması
+5:33–6:12 — Bedel — "I trusted you." Şirketten atılıyorsun. Senin sayın 43.217 $'dan 12.600 $'a düşüyor. "Wonderful." — Kahraman kaybediyor
+6:14–6:30 — Hook'a dönüş — "Neden evsiz adamın sayısı 8 milyar?" Aynı yere gidiyorsun, sayı aynı. — 6 dakikadır açık olan döngü yeniden açılıyor
+6:33–7:23 — Duygusal — Daniel: sakatlık, iş kaybı, yıllardır görmediği kızı. "You stop thinking about money." — Yabancının insanlaşması; kahramanın değişimi
+7:23–8:00 — Twist — Kızın sayısı birebir aynı: 8.742.619.300 $. Kavuşuyorlar, Daniel'in sayısı 86.000 $'a düşüyor. — Aynı sayı, ipucu görevi görüyor
+8:01–8:44 — Kural 3 — Daniel'in eski sayısı, kızı öldükten sonra kalacak mirasmış. Gelecek değişti. — Karanlık ama temiz bir açıklama; döngü kapanıyor
+9:00–9:48 — İkinci set-piece, Kural 4 — Takımlı adam 0 $ → kamyon → kurtarıyorsun → 2,8 milyon $. Sayı aynı zamanda zamanı da içeriyor. — Kahraman yeni öğrendiğini hemen uyguluyor
+9:48–10:36 — Sentez ve ödül — Senin sayın her seferinde 1 dolar artıyor: 12.601, 12.602… "investing in… people." — Kendi sayısıyla kapanış; görsel geri dönüş
+10:36–10:48 — Soru — Kendini zengin etmek mi, birinin geleceğini değiştirmek mi? — İki taraflı ahlaki ikilem
+
+Açık döngüler (loop) tablosu
+Döngü — Açılış — Kapanış — Süre
+Evsiz adamın 8 milyarı — 0:08 — 8:36 — ~8,5 dk
+"Sayılar ne demek?" — 0:40 — 1:57 → 5:25 → 8:10 — Kademeli, her kuralla biraz daha
+Senin sayın — 0:26 — 6:07 (düşüş), 10:15 (yükseliş) — Videonun tamamı
+Arkadaşın şirketi — 3:26 — 5:58 — ~2,5 dk
+
+Ritim: Videoda 25'ten fazla sayı açıklaması var, yani ortalama her 20–25 saniyede bir. Her açıklama küçük bir "ödül" anı ve çoğunun ardından kısa, kuru bir espri geliyor ("Great.", "Wonderful.", "Fair enough.").
+
+3. Video 2: "Herkesin IQ'sunu Görebilseydin?" (13:51, birinci tekil şahıs)
+
+Bölüm haritası
+Zaman — Bölüm — Ne oluyor — Teknik
+0:00–0:33 — Soğuk açılış — 70 IQ'lu çocuk A+ almış, sana gülüyor; senin kâğıdında F, sınıf gülüyor. 160 IQ yansımanda. "Something was seriously wrong here. But let me explain." — Aşağılanma + paradoks. Hook sahnesi 3:18'de birebir yaşanıyor.
+0:35–1:31 — Sabah — Anne 112, ayna 160, Google ("genius territory"), "failed three tests this month. Maybe the internet was broken." Köpekte sayı yok, sandalyeye çarpıyor. — Video 1'deki köpek esprisi aynen tekrar ediyor: kanal şablonu
+1:33–1:58 — Sokak montajı — Park sayacıyla tartışan kadın 146 ("She was losing."), "pull" yazan kapıyı iten adam 91 — Park sayacı esprisi de tekrar. Kanalın kendi tekrar eden şakaları var.
+2:01–2:21 — Yardımcı karakter — Jake 94. "Pretty good… above average." — Komik yardımcı karakter tanıtılıyor
+2:21–3:16 — Antagonist — Mükemmel öğrenci Oliver, IQ 70. Sınavı unuttun. — Kurulum
+3:18–3:39 — Hook'un yaşanması — F ve A+, kâğıt yüzüne sallanıyor — Hook yaklaşık %25 noktasında karşılanıyor
+3:39–4:18 — Kural — IQ, bilgi değil. "Pretty good dinosaur, but still." — Kural kütüphanede keşfediliyor; kendi kendine espri
+4:21–5:20 — Antrenman montajı — Bir hafta çalışmak, sonuç A (A+ değil) — Ölçülü, hak edilmiş bir zafer
+5:23–6:31 — Yeni bahis — Ulusal yarışma, burs ("more money than my parents made in a year"), 2 puan farkla seçilme — Bahis büyüyor
+6:31–7:43 — Yarışma — Matematik (Oliver önde), hafıza (Oliver önde), mantık (sen birincisin). Oliver dördüncü: "He looked scared." — Üç tur yapısı + bölüm sonu merakı
+7:46–9:23 — Duygusal vuruş — Babasının mesajı: "Don't embarrass this family." "98% alsam kalan 2%'yi soruyor." "70 didn't seem like the most important number in the room." — Antagonistin insanlaşması; sayının anlamsızlaşması
+9:25–10:48 — Doruk — Oliver babasını görünce donuyor, yanlış cevap veriyor. Sen kazanıyorsun; yarışmayı bilerek bırakmıyorsun. — Ucuz duygusallıktan kaçınma
+10:55–12:40 — Konuşma ve barışma — Oliver'a teşekkür, birlikte ders çalışma, takışmalı diyalog
+12:41–13:26 — Epilog — Sayılar hâlâ orada, artık önemsiz. Jake: "Did we have homework?" — Yardımcı karakterle kapanış esprisi
+13:41–13:51 — Soru — Kendi IQ'nu bilmek ister miydin? İnsanlara aynı davranır mıydın?
+
+4. İki videonun ortak iskeleti
+
+Oran — Bölüm
+%0–5 — Sahnenin ortasından açılış: görünüş ile sayı arasında bir çelişki + kendini kıyaslama
+%5–12 — Sabah: aile ve köpek (tekrar eden şaka), Google esprisi
+%12–18 — Sokak montajı: 3–4 hızlı sayı, sonuncusu espri
+%18–25 — Kural 1, bir çelişkiyle keşfediliyor
+%25–45 — Gücü kendi çıkarına kullanma planı: önce çalışıyor gibi görünüyor
+%45–50 — Orta nokta: kural yeniden yazılıyor, kahraman bedel ödüyor
+%55–75 — Yabancı ya da antagonist insanlaşıyor; duygusal sır ortaya çıkıyor
+%75–90 — Doruk ve twist: hook'taki sayının gerçek anlamı
+%90–98 — Kahramanın kendi sayısıyla kapanış; yardımcı karakter esprisi
+%98–100 — İki taraflı ahlaki soru
+
+5. Dil ve anlatım teknikleri
+1. Sayı = ödül: Her 20–25 saniyede bir sayı açıklanıyor. Sayılar tam okunuyor ("eight billion, seven hundred forty-two million…") ve ardından kısa bir sessizlik geliyor.
+2. Kuru espri kalıbı: Büyük bir an, sonra tek kelimelik ya da kısa ve sakin bir yorum ("Great.", "Fair enough.", "Excellent. Your financial research is going incredibly well.").
+3. Kurallar anlatılmıyor, gözlemleniyor: Önce iki çelişkili örnek gösteriliyor, sonra "and suddenly it clicks". İzleyici bir adım önde olduğunu hissediyor.
+4. Kahraman hata yapıyor: İki videoda da kahramanın ilk planı başarısız oluyor. Açgözlülük ya da tembellik cezalandırılıyor, öğrenme ödüllendiriliyor.
+5. Kısa diyalog: Replikler 1–6 kelime. Soru-cevap komedisi ("Crypto?" "No." "Real estate?" "No.").
+6. Kanal şablonu: Köpekte sayı yok, park sayacı, Google'da arama. Bunlar kanalın imza şakaları; izleyici tanıdıkça seviyor.
+7. Yabancının sırrı: Her videoda kahramanın küçümsediği ya da hiç fark etmediği biri, duygusal merkeze dönüşüyor (evsiz Daniel, kibirli Oliver).
+
+6. Araç sonuçları ve sınırları
+hookscore.py: İki hook da "WEAK" çıktı (44/100 ve 34/100). Videolar ise medyanın 16–17 katı izlendi. Araç eğitim ve konuşan kafa videoları için ayarlanmış; hikâye hook'larındaki merakı ölçemiyor. Hikâye hook'larını bu araçla puanlamak yanıltıcı olur.
+title.py: "What If You Could See Everyone's IQ?" 98/100, servet başlığı 80/100 aldı. Mobilde "Future" kelimesinden sonrası kesiliyor. Araç bir sayı eklemeyi öneriyor.
+swipe.py: Bölüm 1'deki tabloyu üretti.
+
+7. Bizim formata çıkarımlar (5 dk, A ve B tek videoda)
+1. Önce plan, sonra metin. Rakip videolarda her bölümün bir işlevi var (kural, bedel, insanlaşma, twist). Yazmadan önce bölüm haritası ve açık döngü tablosu çıkarılmalı.
+2. Seçenekler kıyaslatmalı: "Sen olsan?" sorusu kendiliğinden doğmalı. Soyut güçler zayıf kalıyor.
+3. Tekrar eden görsel ödül: Rakipteki sayının karşılığı olarak bizde de her 20 saniyede bir açılan bir şey olmalı (saat, sayaç, rozet).
+4. 5 dakikada iki yol: Rakip 10–14 dakikada yaklaşık 12 bölüm işliyor. Bizim her yola yaklaşık 2 dakika ve 5 bölüm düşüyor. Her yolda tek kural, tek bedel, tek twist olmalı.
+5. Hook: Sahnenin ortasından, görünüş ile gerçek arasında bir çelişki gösteren, cevabı vermeyen bir an.
+6. Kanal şablonu: Bölümler arası tekrar eden 2–3 imza şaka ve tekrar eden bir yardımcı karakter.
