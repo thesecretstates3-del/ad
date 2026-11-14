@@ -1,95 +1,91 @@
-# Bölüm 1: "1 Milyon Dolar mı, 24 Saat Geri mi?"
+# Bölüm 1: "1 Milyon Dolar mı, 24 Saat Geri mi?" (v2: rakip anlatım tarzı)
 
-- **Süre:** yaklaşık 5:00 (anlatım ~700 kelime)
-- **Anlatıcı:** Oli, birinci ağızdan (dış ses; ağız hareket etmez)
-- **Diyalog:** Oli ve Dünkü Oli (ağız senkronlu)
-- **Yerleştirme etiketleri:** `[...]` görsel ve kamera notu, **ANLATICI** dış ses, **OLİ / DÜNKÜ OLİ** replik
+Rakip formülüne göre yazıldı: ikinci tekil şahıs ("sen"), şimdiki zaman, kısa cümleler, her 10–15 saniyede bir kuru espri, gücün kurallarının adım adım keşfi, gücü kendi çıkarına kullanma denemesinin ters tepmesi, bir yabancının hikâyesiyle duygusal bir dönüş, son dönüş ve izleyiciye soru.
+Süre: yaklaşık 5:00 (~720 kelime). `[...]` görsel notu.
 
 ---
 
-## 0:00–0:28 · HOOK
-[Kafe. Oli telefonuna bakıyor. Ekrandaki tarih "14 KASIM"dan "13 KASIM"a döner.]
-**ANLATICI:** Telefonum bugünün dün olduğunu söylüyor.
-[Kamera hızla karşı masaya döner. Dünkü Oli kahvesini indirip ona bakar.]
-**ANLATICI:** Ve karşımda oturan kişi… benim. Dünkü ben. Aynı kapüşon, aynı saç, aynı kahve lekesi.
-**DÜNKÜ OLİ:** Sen… kimsin?
-**OLİ:** Ben… senim. Yarından.
-[Telefonda bir sayaç belirir: 23:59:59.]
-**ANLATICI:** Ve en kötüsü ne biliyor musun? O sayaç sıfırlandığında… ikimizden sadece biri kalacak.
-[Görüntü donar, GERİ SAR efekti.]
-**ANLATICI:** Dur. En baştan anlatayım. Her şey bir seçimle başladı.
+## 0:00–0:25 · HOOK
+[Akşam, otobüs durağı. Bankta yaşlı bir adam. Ekranın köşesinde saat: 18:19.]
+Saat 18:19.
+Bir dakika sonra, şu bankta oturan yaşlı adam yere düşecek.
+Bunu nereden mi biliyorsun? Çünkü dün de düştü.
+Ve dün, sen de herkes gibi kulaklığını takıp yanından geçip gittin.
+Bugün farklı. Çünkü bu sabah, sırf bu bir dakika için… çok pahalı bir şeyi reddettin.
+[Görüntü donar, geri sarma.]
+Ama dur. En baştan anlatayım.
 
-## 0:28–0:55 · SEÇİM (marka sahnesi)
-[14 Kasım sabahı, Oli'nin odası. Odanın ortasında iki geçit belirir.]
-**ANLATICI:** Bu sabah uyandığımda odamın ortasında iki şey duruyordu.
-[A: turkuaz kasa kapısı, "1.000.000 $". B: mercan telefon kulübesi, "−24 SAAT".]
-**ANLATICI:** Solda bir kasa. Sağda eski bir telefon kulübesi. Ve bir not: "Sadece birini seçebilirsin."
-**ANLATICI:** Herkes kasayı seçerdi. Ben de seçecektim. Ta ki telefonuma bakana kadar.
-[Telefon ekranı: dün gece 21:13'te Ege'ye gönderilen mesaj: "Sen benim en kötü arkadaşımsın. Bir daha konuşmayalım." Görüldü, cevap yok.]
-**ANLATICI:** Bir milyon dolarla her şeyi alabilirsin. Dün gece gönderdiğin bir mesajı geri almak hariç.
-**OLİ:** Bunu seçiyorum!
-[B. Kulübe kapısı kapanır: SLAM.]
+## 0:25–0:50 · SEÇİM
+[Sabah. Oda. İki geçit belirir.]
+Bu sabah uyandığında odanın ortasında iki şey duruyor.
+Solda bir kasa. Üstünde "1.000.000 $" yazıyor.
+Sağda eski bir telefon kulübesi. Tepesindeki saat geriye doğru dönüyor: "−24 SAAT".
+Ve küçük bir not: "Sadece birini seçebilirsin."
+Bir milyon dolar. Ya da dünü baştan yaşamak. Bütün anılarınla.
+Herkes kasayı seçer. Sen de seçecektin. Ama aklına bir şey geliyor: dünü biliyorsan… her şeyi biliyorsun.
+**SEN:** Bunu seçiyorum!
 
-## 0:55–1:45 · DÜNE VARIŞ
-**ANLATICI:** Kulübeden çıktığımda her şey aynıydı. Sadece biraz… dündü.
-[Kafe. Garson aynı pozla gülümser.]
-**ANLATICI:** Garson bana baktı: "Her zamankinden mi?" Dün de aynısını sormuştu. Muhtemelen yarın da soracak.
-**ANLATICI:** Sonra kendimi gördüm. Yani… diğer kendimi.
-[Hook anı, bu kez gerçek bağlamında. Kısa tutulur.]
-**ANLATICI:** Kendinle tanışmak sandığın kadar güzel değil. Önce ağzın açıkken nasıl göründüğünü görüyorsun. Sonra nasıl çiğnediğini.
-**DÜNKÜ OLİ:** Kanıtla. Gerçekten bensen kanıtla.
-**OLİ:** Yedi yaşında halıya kustun ve suçu köpeğe attın.
-**DÜNKÜ OLİ:** …Tamam. Sen bensin.
-**ANLATICI:** Bir de bugün sürpriz matematik sınavı olacağını söyledim. Ve sıfır alacağını.
-**DÜNKÜ OLİ:** Nereden biliyorsun?
-**OLİ:** Çünkü ben aldım.
+## 0:50–1:40 · GÜCÜ DENEMEK
+[Kulübe kapısı kapanır. Uyanış. Telefon: 13 KASIM, 09:41.]
+Gözünü açıyorsun. 13 Kasım. Dün. Yine.
+Annen mutfaktan sesleniyor: "Kahvaltı hazır, soğu…"
+"…madan gel." Cümlesini sen bitiriyorsun. Annen sana garip garip bakıyor. Haklı.
+Saat 10:02'de köpeğin vazoyu devirecek. Biliyorsun, çünkü dün devirdi.
+10:01'de vazoyu havada yakalıyorsun. Köpek sana bakıyor. Sen köpeğe bakıyorsun. İkiniz de bunun hakkında konuşmuyorsunuz.
+Sokağa çıkıyorsun. Her şeyi biliyorsun. Otobüs yedi dakika gecikecek. Gecikiyor.
+Karşıdaki çocuğun balonu 10:47'de uçacak. 10:46'da ipini yakalıyorsun. Çocuk ağlamaya başlıyor. Çünkü balonu bir yabancı tutuyor. Mantıklı.
+Ve o an anlıyorsun: Bu güç inanılmaz. Ve bir milyon dolar ondan sonra gelecek.
 
-## 1:45–2:20 · KURAL
-**ANLATICI:** Öğleden sonra iki şey öğrendim.
-**ANLATICI:** Birincisi: Dünkü ben, benden akıllı değil. Bütün cevapları ezberlettim. Yine sıfır aldı. Kâğıda adını yazmayı unutmuş.
-[Telefonda sayaç: 18:22:07]
-**ANLATICI:** İkincisi: o sayaç. Sıfırlanınca ne olacağını bilmiyordum.
-[Oli'nin eli bir an saydamlaşır, sonra düzelir.]
-**ANLATICI:** Ama ellerim… arada bir görünmez oluyordu.
+## 1:40–2:30 · ZENGİN OLMA PLANI VE KURAL
+Çünkü dün akşam haberlerde bir şey izledin: Köşedeki büfeden satılan bir piyango bileti, kırk milyon kazandı.
+Hangi büfe olduğunu biliyorsun. Hangi saatte satıldığını biliyorsun. 14:33.
+14:30'da büfedesin. Üç dakika erken. Profesyonelsin.
+Bileti alıyorsun. Akşam çekiliş yapılıyor. Kazanan numara… senin bilet değil.
+Çünkü sen üç dakika erken geldin. Büfeci sana bir önceki bileti verdi. Kazanan bilet bir sonraki müşteriye gitti.
+Kırk milyon. Arkandaki teyzeye.
+[Teyze dans eder.]
+Ve ilk kuralı öğreniyorsun: Dünü bilmek, yarını bilmek değil. Bir şeye dokunduğun anda, ondan sonraki her şey yeniden yazılıyor.
+Bilgin bir harita gibi. Ama her adım attığında, haritanın bir parçası yanıyor.
 
-## 2:20–3:20 · PLAN VE ORTA NOKTA DÖNÜŞÜ
-**ANLATICI:** Asıl planım basitti. Saat 21:13'te dünkü ben, Ege'ye o mesajı gönderecek. Ben de onu durduracaktım.
-**ANLATICI:** Plan A: Telefonunu saklamak. Buzdolabına koydum. Üç dakikada buldu. Çünkü ben de oraya saklardım.
-**ANLATICI:** Plan B: Şarj aletini saklamak. Telefonun şarjı yüzde doksan dörttü.
-**ANLATICI:** Plan C: Doğrudan söylemek.
-**OLİ:** O mesajı gönderme.
-**DÜNKÜ OLİ:** Hangi mesaj?
-**OLİ:** Ege'ye. Saat 21:13'te.
-**DÜNKÜ OLİ:** Ege bugün beni herkesin önünde rezil etti. Hak ediyor.
-**ANLATICI:** İşte o an anladım. Onu durduramazdım. Çünkü dün ben de tam olarak böyle düşünüyordum.
-**ANLATICI:** Sorun telefon değildi. Sorun bendim.
+## 2:30–3:10 · ORTA NOKTA
+Yani bir milyon doları reddettin, kırk milyonu bir teyzeye hediye ettin, ve elinde sadece bir balon var.
+Çocuk balonu geri istiyor.
+Eve dönüyorsun. Bugün hiçbir şeyi düzeltemedin. Sadece bozdun.
+Sonra saate bakıyorsun. 18:05.
+Ve hatırlıyorsun. Dün akşam, eve dönerken, otobüs durağında bir şey oldu.
+Yaşlı bir adam yere düştü. Etrafta en az on kişi vardı. Kimse durmadı. Sen de durmadın.
+Ertesi sabah haberlerde gördün: Ambulans on iki dakika sonra gelmiş. Geç kalmış.
 
-## 3:20–4:15 · DUYGUSAL VURUŞ
-[Akşam. Park. İki Oli bir bankta. Sayaç 12:36:00. Oli'nin eli daha çok saydamlaşmış.]
-**ANLATICI:** Saat 21:05'te onu parka götürdüm. Ege'yle ilk tanıştığımız banka.
-**OLİ:** Yarın sabah o mesajı tekrar tekrar okuyacaksın. Ege cevap vermeyecek. Bir hafta… bir ay…
-**DÜNKÜ OLİ:** Sen nereden bileceksin?
-**OLİ:** Çünkü ben okudum. Bu sabah. Kırk kere.
-[Dünkü Oli'nin telefonu: mesaj yazılmış, parmağı "Gönder" tuşunun üstünde.]
-**ANLATICI:** 21:13.
-[Parmak "Gönder"den kayar, "Sil"e basar.]
-**DÜNKÜ OLİ:** Yarın onunla konuşurum. Yüz yüze.
-**ANLATICI:** Ve ellerim tamamen kayboldu.
+## 3:10–4:10 · DUYGUSAL DÖNÜŞ
+[18:19. Durak. Hook anı, şimdi gerçek bağlamında.]
+18:19. Duraktasın. Adam bankta oturuyor. Elinde bir poşet mandalina.
+Saat 18:20 oluyor. Adam yere düşüyor. Mandalinalar yola dağılıyor.
+Herkes durup bakıyor. Kimse kıpırdamıyor. Tıpkı dün olduğu gibi.
+Ama sen biliyorsun. Ambulansı 18:19'da aramıştın.
+Ambulans dört dakika sonra geliyor. Sekiz dakika erken.
+Hastanede adam gözlerini açıyor. Sana bakıyor.
+**ADAM:** Neden durdun? Kimse durmadı.
+**SEN:** Çünkü dün durmamıştım.
+Adam ne demek istediğini anlamıyor. Ama gülümsüyor. Bir mandalina uzatıyor.
+Ve o an, kırk milyonu kaçırdığına hiç üzülmediğini fark ediyorsun.
 
-## 4:15–5:00 · SON DÖNÜŞ VE SORU
-[14 Kasım sabahı. Oda boş: ne kasa var, ne kulübe.]
-**ANLATICI:** Bir sonraki hatırladığım şey sabahtı. 14 Kasım. Odamda hiçbir şey yoktu.
-[Telefon: Ege'den mesaj: "Dünkü konuşma için sağ ol. Okuldan sonra döner?"]
-**ANLATICI:** Dün Ege'yle hiç konuşmamıştık. Yani… ben konuşmamıştım.
-**ANLATICI:** Bir milyon dolar kaybettim. Ve hayatımın en iyi seçimini yaptım.
-[Ekranda kilitli A geçidi; kilit ikonu titrer.]
-**ANLATICI:** Ama bir şey hâlâ aklımda: Kasayı seçseydim ne olurdu?
-**ANLATICI:** Peki sen? Bir milyon dolar mı, yoksa 24 saat geri mi? Yorumlara A ya da B yaz.
+## 4:10–5:00 · SON DÖNÜŞ VE SORU
+[Ertesi sabah. 14 Kasım, 09:41. Oda.]
+Ertesi sabah uyanıyorsun. 14 Kasım. Saat 09:41.
+Ve odanın ortasında… yine iki şey duruyor.
+Solda kasa. "1.000.000 $".
+Sağda telefon kulübesi. "−24 SAAT".
+Ve yeni bir not: "Yine seçebilirsin."
+Dün bir hayat kurtardın. Bugün bir milyon dolar alabilirsin. Ya da bir gün daha yaşayabilirsin.
+Bu sefer neyi kurtaracağını bilmeden.
+[A ve B geçitleri, ikisi de parlıyor.]
+Peki sen? Bu sefer hangisini seçerdin? A mı, B mi? Yorumlara yaz.
 
 ---
 
 ### Yapım notları
-- **Espri aralığı:** her 10–20 saniyede bir. Garson, kusma itirafı, buzdolabı, yüzde 94 şarj, adını yazmayı unutmak.
-- **Running gag:** Garsonun "Her zamankinden mi?" sorusu. Devam bölümlerinde tekrar kullanılabilir.
-- **Hook'un karşılığı:** Hook sahnesi 1:10'da gerçek bağlamında yaşanır; asıl cevap, yani "kim kalacak?", sonda gelir.
-- **A yolu:** "Kasayı seçseydim?" sorusu ikinci bölüme ya da oyundaki kilitli dala köprü olur.
+- **Anlatım:** Tamamı dış ses, "sen" diliyle. Diyalog yalnızca iki satır ("Bunu seçiyorum!", hastane). Ağız senkronu yalnızca bu satırlarda kullanılır.
+- **Espri noktaları:** cümleyi tamamlamak, köpekle bakışma, ağlayan çocuk, üç dakika erken "profesyonel", teyzeye kırk milyon, balon.
+- **Görsel sayılar:** Rakipteki "baş üstü sayılar" yerine bizim imzamız saat ve geri sayım. Her önemli anda ekranda saat görünür (10:02, 14:33, 18:19).
+- **Hook karşılığı:** 3:10'da hook sahnesi gerçek bağlamıyla yaşanır.
+- **Son:** Geçitlerin yeniden belirmesi, ikinci bölüme ve oyundaki A yoluna köprü olur.
