@@ -274,18 +274,17 @@ export function setPose(c, name) {
     p.head.rotation.x = 0.03;
     p.hair_curl.rotation.z = 0.06;
   } else if (name === 'point') {
-    c.rotation.y = -0.8;
-    p.hips.rotation.z = 0.05; p.torso.rotation.z = -0.07; p.torso.rotation.y = 0.12;
-    // pointing arm (near arm): forward, slightly raised
-    p.armR_upper.rotation.set(-1.6, 0, -0.3);
-    p.armR_lower.rotation.set(-0.06, 0, 0);
-    p.handR.userData.index.visible = true;
-    // near arm relaxed, forearm slightly forward
-    p.armL_upper.rotation.set(0.1, 0, 0.24); p.armL_lower.rotation.set(-0.5, 0, 0);
-    // weight on right leg (straight), left leg relaxed
-    p.legR_upper.rotation.set(0, 0, -0.02);
-    p.legL_upper.rotation.set(-0.18, 0, 0.1); p.legL_lower.rotation.set(0.42, 0, 0); p.footL.rotation.set(-0.24, 0, 0);
-    p.head.rotation.set(0.0, 0.5, 0.13);
+    // iso diorama: body faces the camera, the character's LEFT arm (screen right) points sideways at "the one"
+    c.rotation.y = 0;
+    p.hips.rotation.z = -0.05; p.torso.rotation.z = 0.06; p.torso.rotation.y = 0.12;
+    p.armL_upper.rotation.set(0, 0, 1.68);
+    p.armL_lower.rotation.set(0, 0, 0.03);
+    p.handL.userData.index.visible = true;
+    p.armR_upper.rotation.set(0.12, 0, -0.18); p.armR_lower.rotation.set(-0.55, 0, 0);
+    // weight on left leg (straight), right leg relaxed
+    p.legL_upper.rotation.set(0, 0, 0.03);
+    p.legR_upper.rotation.set(-0.16, 0, -0.1); p.legR_lower.rotation.set(0.38, 0, 0); p.footR.rotation.set(-0.2, 0, 0);
+    p.head.rotation.set(0.0, 0.28, -0.12);
     p.hair_curl.rotation.z = -0.1;
   } else throw new Error('unknown pose ' + name);
   groundFeet(c);

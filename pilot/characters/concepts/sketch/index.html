@@ -97,8 +97,8 @@ function card(name, expr, x, y, w, h, rot, tape, seed) {
   pencil(g, b, 2, 0.55, 3, 1.4, GR, true);
   c.addChild(g, dots);
   const ch = createCharacter(app, { pose: 'idle', expression: expr, shadow: false, wobbleSeed: seed });
-  const head = ch.parts.head; head.parent.removeChild(head); head.position.set(0, 0); head.rotation = 0; head.scale.set(1.08);
-  const hc = new Container(); hc.position.set(0, h / 2 - 100); hc.addChild(head); c.addChild(hc);
+  const head = ch.parts.head; head.parent.removeChild(head); head.position.set(0, 0); head.rotation = 0; head.scale.set(0.98);
+  const hc = new Container(); hc.position.set(0, h / 2 - 96); hc.addChild(head); c.addChild(hc);
   txt(name, 28, 0, h / 2 - 62, { ax: 0.5, ls: 14, parent: c });
   const tp = new Container(); c.addChild(tp);
   for (const [tx, ty, tr] of tape) { const tg = new Graphics(); tg.rect(-55, -15, 110, 30).fill({ color: '#2EC4B6', alpha: 0.5 }); for (let i = -50; i < 55; i += 8) tg.moveTo(i, -15).lineTo(i, 15).stroke({ width: 1, color: '#fff', alpha: 0.18 }); tg.position.set(tx, ty); tg.rotation = tr; tp.addChild(tg); }
