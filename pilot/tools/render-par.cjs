@@ -5,19 +5,11 @@ const { spawn, execFileSync } = require('child_process');
 const fs = require('fs'); const path = require('path'); const os = require('os');
 const [page, out, W = '4', FPS = '30', audio] = process.argv.slice(2);
 const workers = +W, fps = +FPS;
-const html = fs.readFileSync(path.resolve(__dirname, '..', '..', page.split('?')[0]), 'utf8');
 (async () => {
   // Ask the page for its duration via a 1-frame stills call is overkill; render.cjs prints nothing about it,
   // so read it with a tiny probe run.
-  const probe = execFileSync('node', ['-e', `
-    const { chromium } = require('playwright'); const http=require('http'),fs=require('fs'),path=require('path');
-    const root=${JSON.stringify(path.resolve(__dirname, '..', '..'))};
-    const s=http.createServer((q,r)=>{const p=path.join(root,decodeURIComponent(q.url.split('?')[0]));
-      if(!fs.existsSync(p)||fs.statSync(p).isDirectory()){r.writeHead(404);return r.end();}r.end(fs.readFileSync(p));});
-    s.listen(0,async()=>{const b=await chromium.launch({executablePath:'/opt/pw-browsers/chromium',args:['--use-angle=swiftshader','--enable-unsafe-swiftshader']});
-      const pg=await b.newPage();await pg.goto('http://127.0.0.1:'+s.address().port+'/${page}?render');
-      await pg.waitForFunction(()=>window.__READY===true,null,{timeout:60000});console.log(await pg.evaluate(()=>window.DURATION));await b.close();s.close();});`],
-    { cwd: path.resolve(__dirname, '..', '..') }).toString().trim().split('\n').pop();
+  const probe = execFileSync('node', [path.join(__dirname, 'render.cjs'), page, '--duration'],
+    { cwd: path.resolve(__dirname, '..', '..') }).toString().match(/DURATION=([\d.]+)/)[1];
   const total = Math.round(+probe * fps);
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'rpar-'));
   const t0 = Date.now();

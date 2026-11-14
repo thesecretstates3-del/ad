@@ -90,7 +90,7 @@ function cafeShot(sc, th, ta, live) {
   // table 2 + Oli 2 (yesterday)
   { const c2 = drawChair(O2X + 20, -1); c2.y = TY; act.addChild(c2); }
   const sipK = sstep(4.2, 4.4, th) * (1 - sstep(4.85, 5.05, th));
-  const low = clone(PO.holdCup); low.turn = 0; low.head.r = 0; low.armL = { u: -0.3, l: -0.95, hand: 'open' };
+  const low = clone(PO.holdCup); low.turn = 0; low.head.r = 0; low.armL = { ...low.armL, u: -0.3, l: -0.95, hand: 'open' };
   let p2 = blend(PO.holdCup, PO.sip, sipK); p2 = blend(p2, low, outCubic(prog(th, 5.0, 5.4)));
   const sur = th >= 5.4, bump = sur ? Math.max(0, 1 - (th - 5.4) * 8) : 0;
   p2.hips.y += 8;

@@ -39,7 +39,9 @@ server.listen(0, async () => {
   } catch (e) { return fail('page did not become ready: ' + e); }
   if (errors.length) return fail('errors while loading');
 
-  if (args[1] === '--stills') {
+  if (args[1] === '--duration') {
+    console.log('DURATION=' + await page.evaluate(() => window.DURATION));
+  } else if (args[1] === '--stills') {
     const outDir = args[2]; fs.mkdirSync(outDir, { recursive: true });
     for (const ts of args.slice(3)) {
       await page.evaluate(t => window.renderAt(t), +ts);
