@@ -1,0 +1,105 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Oli — FLAT VECTOR</title></head>
+<body style="margin:0;background:#222">
+<script type="importmap">{"imports":{"pixi.js":"/node_modules/pixi.js/dist/pixi.mjs"}}</script>
+<script type="module">
+import { Application, Container, Graphics, Text } from 'pixi.js';
+import { createCharacter, setPose, setExpression, explodeRig, PALETTE as P } from './character.js';
+
+const app = new Application();
+await app.init({ width: 1920, height: 1080, background: P.bg, preference: 'webgl', antialias: true, resolution: 1 });
+document.body.appendChild(app.canvas);
+Object.assign(window, { app });
+const S = app.stage;
+
+// ---------- background: flat paper + a few large soft shapes ----------
+const bg = new Graphics();
+bg.circle(300, 700, 520).fill({ color: '#F0E2C4', alpha: 0.75 });
+bg.ellipse(980, 330, 420, 260).fill({ color: '#F8F0DF', alpha: 0.8 });
+bg.circle(1700, 980, 360).fill({ color: '#EFE0BF', alpha: 0.6 });
+bg.circle(120, 80, 220).fill({ color: '#F8F0DF', alpha: 0.6 });
+S.addChild(bg);
+
+const txt = (s, size, x, y, o = {}) => {
+  const t = new Text({ text: s, style: { fontFamily: 'Trebuchet MS, Verdana, Arial, sans-serif', fontSize: size, fontWeight: '700',
+    fill: o.fill || P.ink, letterSpacing: o.ls ?? 3 } });
+  t.alpha = o.alpha ?? 1; t.anchor.set(o.ax ?? 0, o.ay ?? 0); t.position.set(x, y); S.addChild(t); return t;
+};
+const panel = (x, y, w, h) => {
+  const g = new Graphics();
+  g.roundRect(x, y, w, h, 28).fill({ color: '#FBF5E6', alpha: 0.7 });
+  g.roundRect(x, y, w, h, 28).stroke({ width: 3, color: P.ink, alpha: 0.12 });
+  S.addChild(g);
+};
+
+// ---------- title ----------
+txt('FLAT VECTOR', 34, 56, 40, { ls: 8 });
+txt('OLI  ·  CHARACTER SHEET  ·  WHAT IF…?', 16, 58, 90, { alpha: 0.5, ls: 4 });
+
+// fit a character so its body (hips subtree) is `targetH` px tall, feet on groundY
+function place(ch, cx, groundY, targetH) {
+  const b = ch.parts.hips.getLocalBounds();
+  const h = (b.maxY - b.minY) + 0;
+  const s = targetH / ((b.maxY - b.minY) * 1);
+  ch.root.scale.set(s);
+  ch.root.position.set(cx, groundY);
+  ch.fitBounds = b;
+  S.addChild(ch.root);
+  return s;
+}
+
+// ---------- idle (left) ----------
+const idle = createCharacter(app, { pose: 'idle', expression: 'neutral' });
+place(idle, 330, 1010, 640);
+txt('IDLE', 18, 330, 1038, { ax: 0.5, alpha: 0.55, ls: 6 });
+
+// ---------- point (centre) ----------
+const pt = createCharacter(app, { pose: 'point', expression: 'happy' });
+const b0 = pt.parts.hips.getLocalBounds();
+place(pt, 770, 1010, 600);
+txt('POINT  ·  “I CHOOSE THIS ONE”', 18, 800, 1038, { ax: 0.5, alpha: 0.55, ls: 5 });
+
+// ---------- expressions 2x2 (right top) ----------
+const RX = 1180, RW = 700;
+panel(RX, 40, RW, 500);
+txt('EXPRESSIONS', 16, RX + 28, 56, { alpha: 0.55, ls: 5 });
+const names = ['neutral', 'happy', 'surprised', 'scared'];
+names.forEach((n, i) => {
+  const c = createCharacter(app, { pose: 'idle', expression: n, shadow: false });
+  const head = c.parts.head;
+  const cell = new Container();
+  const cx = RX + 28 + (i % 2) * 330 + 165, cy = 84 + Math.floor(i / 2) * 226;
+  head.parent.removeChild(head);
+  head.position.set(0, 0); head.rotation = 0;
+  head.scale.set(0.46);
+  cell.position.set(cx, cy + 168);
+  cell.addChild(head);
+  S.addChild(cell);
+  txt(n.toUpperCase(), 17, cx, cy + 184, { ax: 0.5, ay: 0, alpha: 0.7, ls: 5 });
+});
+
+// ---------- exploded rig (right bottom) ----------
+panel(RX, 560, RW, 480);
+txt('RIG  ·  EXPLODED, PIVOTS', 16, RX + 28, 576, { alpha: 0.55, ls: 5 });
+const rig = createCharacter(app, { shadow: false });
+const view = new Container(); view.position.set(RX + RW / 2, 560 + 424); S.addChild(view);
+const ex = explodeRig(rig, view, 0.5);
+// hierarchy guide lines first, then parts, then pivot dots
+const guide = new Graphics(); view.addChild(guide);
+ex.parts.forEach((p) => view.addChild(p));
+const dots = new Graphics(); view.addChild(dots);
+const shared0 = new Set(['hood_collar', 'pocket', 'strings', 'pin', 'hem', 'torso_body']);
+for (const [child, par] of Object.entries(ex.parentOf)) {
+  if (shared0.has(child)) continue;
+  const a = ex.pivots[child], b = ex.pivots[par]; if (!a || !b) continue;
+  guide.moveTo(a.x, a.y).lineTo(b.x, b.y);
+}
+guide.stroke({ width: 1.5, color: P.ink, alpha: 0.28 });
+const shared = new Set(['hood_collar', 'pocket', 'strings', 'pin', 'hem', 'torso_body']); // share the torso pivot
+for (const k in ex.pivots) {
+  if (shared.has(k)) continue;
+  const { x, y } = ex.pivots[k];
+  dots.circle(x, y, 5.5).fill(P.coral).stroke({ width: 2, color: P.ink });
+}
+app.render();
+window.__READY = true;
+</script></body></html>
