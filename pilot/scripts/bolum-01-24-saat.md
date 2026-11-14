@@ -44,7 +44,14 @@ Solda çelik bir kasa. Kapağında "1.000.000 $" yazıyor.
 Sağda, içinde ahizesi sallanan eski bir telefon kulübesi. Tepesindeki saat geriye doğru dönüyor: eksi yirmi dört saat.
 Kulübenin camına bir not yapıştırılmış: "Dünü baştan yaşa. Her şeyi hatırlayarak."
 Kasanın üstünde de bir not var: "Sadece birini açabilirsin."
-Herkes kasayı açar. O yüzden önce kulübeye girelim.
+Bir milyon dolar. Düşünecek bir şey yok. Elin kasanın koluna gidiyor.
+`[EKRANDA: Kulübedeki ahize sallanır, zil çalar. Telefon kulübesi titrer.]`
+Tam o sırada kulübedeki telefon çalıyor. Ahizeyi kaldırıyorsun. Hattın öbür ucundaki ses senin sesin:
+**SES (SENİN SESİN, CIZIRTILI):** Dün saat 18:20'de bir şeyi kaçırdın.
+Ve hat kapanıyor.
+Dün 18:20'de ne olduğunu hatırlamıyorsun. Kulaklığın takılıydı, eve yürüyordun, o kadar.
+Kasa bir milyon dolar diyor. Kulübe ise sana dün hakkında bilmediğin bir şey söylüyor. Ve onu öğrenmenin tek yolu, dünü tekrar yaşamak.
+Elini kasanın kolundan çekiyorsun.
 `[EKRANDA: Oli B'yi gösterir: "BUNU SEÇİYORUM!" A kararır. Kulübe kapısı: SLAM.]`
 
 ### 0:40–2:25 · B YOLU: DÜN, İKİNCİ KEZ
@@ -63,22 +70,24 @@ Büfeci, sen erken geldiğin için sana bir önceki bileti verdi. Kırk milyonlu
 `[EKRANDA: Haber bandı: "Emekli öğretmen 40 milyon kazandı." Teyze kameraya poşetini sallar.]`
 Ve kuralı o an anlıyorsun: Bir şeye dokunduğunda, ondan sonra gelen her şey yeniden yazılıyor. Dünkü hafızan artık bir harita, ve dokunduğun her yerde harita siliniyor.
 `[EKRANDA: Saat damgalarının yanında soru işaretleri çıkar: 18:20 ?]`
-Bu, akşam için bir sorun. Çünkü dün akşam 18:20'de, eve dönerken, otobüs durağında yaşlı bir adam yere düştü. Elinden bir poşet mandalina yola dağıldı. Durakta on bir kişi vardı. Sen dahil hiçbiri yanına gitmedi. Ambulans on iki dakika sonra geldi.
-Bugün 18:10'da duraktasın. Adam bankta oturuyor, mandalina poşeti kucağında.
+Bu da bir sorun. Çünkü sabahki ses sana tek bir şey verdi: 18:20. Ne olacağını hâlâ bilmiyorsun. Ve artık dünün aynen tekrar edeceğinden de emin değilsin.
+18:10'da, dün kulaklıkla yürüdüğün yoldasın. Yolun ortasında bir otobüs durağı var. Bankta, kucağında mandalina poşetiyle yaşlı bir adam oturuyor. Dün buradan geçtin. Onu hiç fark etmedin.
 18:19. 18:20. Hiçbir şey olmuyor.
 18:21'de adam kalkıp otobüs tarifesine bakıyor. Belki bugün düşmeyecek. Belki sen bir şeyi değiştirdin.
-18:24'te yere düşüyor.
-Telefonun zaten elinde. Ambulans dört dakikada geliyor.
+18:24'te yere düşüyor. Mandalinalar yola dağılıyor. Durakta on bir kişi var. Kimse kıpırdamıyor.
+Sen zaten yanındasın. Telefonun zaten elinde. Ambulans dört dakikada geliyor.
 `[EKRANDA: Hastane odası. Adam yatakta, başucunda mandalina poşeti.]`
 Adamın adı Hikmet. Yetmiş bir yaşında. Gözlerini açtığında ilk sorusu şu oluyor:
 **HİKMET:** Neden durdun? Kimse durmaz.
-**SEN:** Dün durmamıştım.
+**SEN:** Dün de buradan geçtim. Ama kulaklığım takılıydı.
 Hikmet Bey ne demek istediğini anlamıyor. Bir mandalina uzatıyor ve gözlerini kapatıyor.
+Sabahki sesin ne demek istediğini artık biliyorsun. Ama o adamın dün, sen yokken ne yaşadığını hâlâ bilmiyorsun.
 
 ### 2:25–2:40 · GERİ SARMA
 `[EKRANDA: Görüntü VHS gibi geri sarılır. Oda, saat 07:12. B kararır, A parlar.]`
 Peki kasayı açsaydın?
-Saat 07:12. Aynı oda, aynı iki kapı. Bu sefer çelik kapının kolunu çeviriyorsun.
+Saat 07:12. Aynı oda, aynı iki kapı. Bu sefer elin kasanın kolunda. Kulübedeki telefon çalmaya başlıyor.
+Açmıyorsun. Kolu çeviriyorsun. Telefon susuyor.
 
 ### 2:40–4:20 · A YOLU: BİR MİLYON DOLAR
 `[EKRANDA: Kasa açılır. İçinde para yok, sadece bir banka kartı. Telefon titrer: "Hesabınıza 1.000.000 $ yatırıldı."]`
